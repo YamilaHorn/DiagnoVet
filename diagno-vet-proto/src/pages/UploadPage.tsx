@@ -1,6 +1,6 @@
-import { FileDropzone } from "./components/FileDropzone";
+import { FileDropzone } from "../components/FileDropzone";
 
-export default function App() {
+export function UploadPage() {  
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
       <div className="max-w-2xl w-full">
