@@ -1,4 +1,6 @@
+import PhoneInput from "react-phone-number-input";
 import { AppHeader } from "../components/AppHeader";
+import "react-phone-number-input/style.css";
 
 type Props = {
   data: {
@@ -21,7 +23,9 @@ export function PostConfirmationPage({
   const { phone, title, fullName, license } = data;
 
   const isValid =
-    phone.trim() && title.trim() && fullName.trim();
+    phone &&
+    title.trim() &&
+    fullName.trim();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,15 +35,12 @@ export function PostConfirmationPage({
 
   return (
     <>
-      <AppHeader
-  title="Account setup"
-  onBack={onBack}
-/>
-
+      <AppHeader title="Account setup" onBack={onBack} />
 
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
         <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-gray-100 p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
 
+          {/* LEFT */}
           <div className="flex flex-col justify-center">
             <p className="text-sm text-blue-600 font-medium mb-2">
               Account setup · Step 2 of 2
@@ -66,24 +67,29 @@ export function PostConfirmationPage({
             </div>
           </div>
 
+          {/* RIGHT – FORM */}
           <form
             onSubmit={handleSubmit}
             className="flex flex-col justify-center space-y-5"
           >
+            {/* PHONE */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Phone number *
               </label>
-              <input
+
+              <PhoneInput
+                international
+                defaultCountry="CA"
                 value={phone}
-                onChange={(e) =>
-                  onChange({ ...data, phone: e.target.value })
+                onChange={(value) =>
+                  onChange({ ...data, phone: value || "" })
                 }
-                placeholder="+54 9 11 1234 5678"
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+                className="PhoneInput"
               />
             </div>
 
+            {/* TITLE */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Professional title *
@@ -105,6 +111,7 @@ export function PostConfirmationPage({
               </select>
             </div>
 
+            {/* FULL NAME */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Full name *
@@ -119,6 +126,7 @@ export function PostConfirmationPage({
               />
             </div>
 
+            {/* LICENSE */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Professional license{" "}

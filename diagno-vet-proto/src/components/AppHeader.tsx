@@ -15,12 +15,10 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <header className="bg-white border-b border-gray-100 px-6 py-4">
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto grid grid-cols-3 items-center">
         
-        {/* LEFT ZONE */}
-        <div className="flex items-center gap-4">
-          
-          {/* LOGO */}
+        {/* LEFT */}
+        <div className="flex items-center gap-4 justify-start">
           {logoLink ? (
             <a href={logoLink}>
               <img
@@ -37,7 +35,6 @@ export function AppHeader({
             />
           )}
 
-          {/* BACK */}
           {onBack && (
             <button
               onClick={onBack}
@@ -46,17 +43,19 @@ export function AppHeader({
               ← <span className="hidden sm:inline">Back</span>
             </button>
           )}
+        </div>
 
-          {/* TITLE */}
+        {/* CENTER */}
+        <div className="flex justify-center">
           {title && (
-            <h1 className="text-sm sm:text-base font-medium text-gray-900 ml-2">
+            <h1 className="text-sm sm:text-base font-medium text-gray-900 text-center">
               {title}
             </h1>
           )}
         </div>
 
-        {/* RIGHT ZONE */}
-        <div className="flex items-center gap-4">
+        {/* RIGHT */}
+        <div className="flex items-center gap-4 justify-end">
           {right}
           <LanguageSwitcher />
         </div>
