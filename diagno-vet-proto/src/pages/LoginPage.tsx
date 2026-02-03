@@ -8,6 +8,7 @@ type Props = {
 };
 
 export function LoginPage({ onExistingUser, onNewUser }: Props) {
+  
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +85,7 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-500">
-            New to DiagnoVetAI? We’ll help you set up your account.
+            Enter your email — we’ll check if you already have an account
           </p>
         </div>
       </div>

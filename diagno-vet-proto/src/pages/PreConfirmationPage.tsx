@@ -31,15 +31,10 @@ export function PreConfirmationPage({
   return (
     <>
       <AppHeader
-        left={
-          <button
-            onClick={onBack}
-            className="text-sm text-gray-600 hover:text-gray-900"
-          >
-            ← Back
-          </button>
-        }
-      />
+  title="Account setup"
+  onBack={onBack}
+/>
+
 
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
         <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border p-10 grid md:grid-cols-2 gap-10">
@@ -85,12 +80,13 @@ export function PreConfirmationPage({
             />
 
             <button
-              type="submit"
-              disabled={!isValid}
-              className="bg-blue-600 text-white h-11 rounded-md disabled:bg-blue-300"
-            >
-              Continue →
-            </button>
+  type="submit"
+  disabled={!isValid}
+  className="w-full bg-blue-600 text-white h-11 rounded-md disabled:bg-blue-300"
+>
+  Continue →
+</button>
+
           </form>
         </div>
       </div>

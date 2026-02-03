@@ -32,15 +32,10 @@ export function PostConfirmationPage({
   return (
     <>
       <AppHeader
-        left={
-          <button
-            onClick={onBack}
-            className="text-sm text-gray-600 hover:text-gray-900"
-          >
-            ← Back
-          </button>
-        }
-      />
+  title="Account setup"
+  onBack={onBack}
+/>
+
 
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
         <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-gray-100 p-10 grid grid-cols-1 md:grid-cols-2 gap-10">

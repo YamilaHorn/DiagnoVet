@@ -22,16 +22,11 @@ export function AnalyzePage({ onFinish, onBack }: Props) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <AppHeader
-        title="New Diagnostic Report"
-        left={
-          <button
-            onClick={onBack}
-            className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
-          >
-            ← Back
-          </button>
-        }
-      />
+  title="New Diagnostic Report"
+  onBack={onBack}
+  logoLink="/"
+/>
+
 
       <main className="flex-1 px-6 py-8 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
