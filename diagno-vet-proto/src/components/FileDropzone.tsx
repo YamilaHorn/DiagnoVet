@@ -18,57 +18,111 @@ function readableBytes(bytes: number) {
   return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i];
 }
 
-export const FileDropzone: React.FC = () => {
+type Props = {
+  onUploadComplete?: () => void;
+};
+
+export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
   const [items, setItems] = useState<UploadItem[]>([]);
   const [message, setMessage] = useState<string | null>(null);
 
-  const startUpload = useCallback((item: UploadItem) => {
-    // Simula upload
-    setItems((prev) => prev.map(p => p.id === item.id ? { ...p, status: "uploading", progress: 0 } : p));
-    let progress = 0;
-    const id = setInterval(() => {
-      progress += Math.random() * 20;
-      if (progress >= 100) {
-        clearInterval(id);
-        setItems(prev => prev.map(p => p.id === item.id ? { ...p, status: "done", progress: 100 } : p));
-        setMessage("Archivo(s) cargado(s) correctamente.");
-        setTimeout(() => setMessage(null), 3500);
-      } else {
-        setItems(prev => prev.map(p => p.id === item.id ? { ...p, progress: Math.round(progress) } : p));
-      }
-    }, 300);
-  }, []);
+  const startUpload = useCallback(
+    (item: UploadItem) => {
+      setItems((prev) =>
+        prev.map((p) =>
+          p.id === item.id ? { ...p, status: "uploading", progress: 0 } : p
+        )
+      );
 
-  const handleFiles = useCallback((files: FileList | null) => {
-    if (!files) return;
-    const arr = Array.from(files);
-    const valid: UploadItem[] = [];
-    for (const f of arr) {
-      if (!ALLOWED_TYPES.includes(f.type)) {
-        setMessage(`Tipo de archivo no permitido: ${f.name}`);
-        setTimeout(() => setMessage(null), 3000);
-        continue;
-      }
-      if (f.size > MAX_FILE_MB * 1024 * 1024) {
-        setMessage(`${f.name} excede el peso máximo de ${MAX_FILE_MB} MB.`);
-        setTimeout(() => setMessage(null), 4000);
-        continue;
-      }
-      const id = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
-      const item: UploadItem = { id, file: f, progress: 0, status: "queued", preview: f.type.startsWith("image/") ? URL.createObjectURL(f) : null };
-      valid.push(item);
-    }
-    if (valid.length) {
-      setItems(prev => [...prev, ...valid]);
-      // lanzar uploads automáticos en demo
-      setTimeout(() => valid.forEach(it => startUpload(it)), 500);
-    }
-  }, [startUpload]);
+      let progress = 0;
+      const id = setInterval(() => {
+        progress += Math.random() * 20;
 
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    handleFiles(e.dataTransfer.files);
-  }, [handleFiles]);
+        if (progress >= 100) {
+          clearInterval(id);
+
+          setItems((prev) => {
+            const next = prev.map((p) =>
+  p.id === item.id
+    ? { ...p, status: "done" as const, progress: 100 }
+    : p
+);
+
+
+            // 🔑 Avisar UNA sola vez cuando hay al menos un archivo cargado
+            if (onUploadComplete && !prev.some((p) => p.status === "done")) {
+              onUploadComplete();
+            }
+
+            return next;
+          });
+
+          setMessage("Archivo(s) cargado(s) correctamente.");
+          setTimeout(() => setMessage(null), 3500);
+        } else {
+          setItems((prev) =>
+            prev.map((p) =>
+              p.id === item.id
+                ? { ...p, progress: Math.round(progress) }
+                : p
+            )
+          );
+        }
+      }, 300);
+    },
+    [onUploadComplete]
+  );
+
+  const handleFiles = useCallback(
+    (files: FileList | null) => {
+      if (!files) return;
+
+      const arr = Array.from(files);
+      const valid: UploadItem[] = [];
+
+      for (const f of arr) {
+        if (!ALLOWED_TYPES.includes(f.type)) {
+          setMessage(`Tipo de archivo no permitido: ${f.name}`);
+          setTimeout(() => setMessage(null), 3000);
+          continue;
+        }
+
+        if (f.size > MAX_FILE_MB * 1024 * 1024) {
+          setMessage(`${f.name} excede el peso máximo de ${MAX_FILE_MB} MB.`);
+          setTimeout(() => setMessage(null), 4000);
+          continue;
+        }
+
+        const id = `${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2, 8)}`;
+
+        valid.push({
+          id,
+          file: f,
+          progress: 0,
+          status: "queued",
+          preview: f.type.startsWith("image/")
+            ? URL.createObjectURL(f)
+            : null,
+        });
+      }
+
+      if (valid.length) {
+        setItems((prev) => [...prev, ...valid]);
+        setTimeout(() => valid.forEach(startUpload), 500);
+      }
+    },
+    [startUpload]
+  );
+
+  const onDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      handleFiles(e.dataTransfer.files);
+    },
+    [handleFiles]
+  );
 
   return (
     <div className="space-y-4">
@@ -86,41 +140,70 @@ export const FileDropzone: React.FC = () => {
             onChange={(e) => handleFiles(e.target.files)}
             accept={ALLOWED_TYPES.join(",")}
           />
-          <span className="px-4 py-2 bg-slate-100 rounded-md hover:bg-slate-200 text-sm">Seleccionar archivos</span>
+          <span className="px-4 py-2 bg-slate-100 rounded-md hover:bg-slate-200 text-sm">
+            Seleccionar archivos
+          </span>
         </label>
-        <p className="text-xs text-slate-400 mt-2">Soportado: jpg, png, pdf — Máx {MAX_FILE_MB} MB c/u</p>
+        <p className="text-xs text-slate-400 mt-2">
+          Soportado: jpg, png, pdf — Máx {MAX_FILE_MB} MB c/u
+        </p>
       </div>
 
-      {message && <div className="text-sm text-green-700 bg-green-50 p-2 rounded">{message}</div>}
+      {message && (
+        <div className="text-sm text-green-700 bg-green-50 p-2 rounded">
+          {message}
+        </div>
+      )}
 
       <div className="space-y-2">
-        {items.map(it => (
-          <div key={it.id} className="flex items-center bg-white p-2 rounded shadow-sm">
+        {items.map((it) => (
+          <div
+            key={it.id}
+            className="flex items-center bg-white p-2 rounded shadow-sm"
+          >
             {it.preview ? (
-              <img src={it.preview} alt={it.file.name} className="w-14 h-10 object-cover rounded mr-3" />
+              <img
+                src={it.preview}
+                alt={it.file.name}
+                className="w-14 h-10 object-cover rounded mr-3"
+              />
             ) : (
-              <div className="w-14 h-10 flex items-center justify-center bg-slate-100 rounded mr-3 text-xs">{it.file.type.split("/").pop()}</div>
+              <div className="w-14 h-10 flex items-center justify-center bg-slate-100 rounded mr-3 text-xs">
+                {it.file.type.split("/").pop()}
+              </div>
             )}
+
             <div className="flex-1">
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-sm font-medium">{it.file.name}</div>
-                  <div className="text-xs text-slate-500">{readableBytes(it.file.size)}</div>
+                  <div className="text-xs text-slate-500">
+                    {readableBytes(it.file.size)}
+                  </div>
                 </div>
-                <div className="text-xs text-slate-500 ml-4">{it.status === "uploading" ? `${it.progress}%` : it.status === "done" ? "Listo" : "En cola"}</div>
+                <div className="text-xs text-slate-500 ml-4">
+                  {it.status === "uploading"
+                    ? `${it.progress}%`
+                    : it.status === "done"
+                    ? "Listo"
+                    : "En cola"}
+                </div>
               </div>
+
               <div className="mt-2">
                 <div className="w-full bg-slate-100 h-2 rounded">
-                  <div style={{ width: `${it.progress}%` }} className="h-2 rounded bg-slate-600 transition-all" />
+                  <div
+                    style={{ width: `${it.progress}%` }}
+                    className="h-2 rounded bg-slate-600 transition-all"
+                  />
                 </div>
               </div>
             </div>
+
             <div className="ml-3 flex gap-2">
-              {it.status === "done" ? (
-                <button className="text-xs px-2 py-1 border rounded">Ver</button>
-              ) : (
-                <button className="text-xs px-2 py-1 border rounded">Cancelar</button>
-              )}
+              <button className="text-xs px-2 py-1 border rounded">
+                {it.status === "done" ? "Ver" : "Cancelar"}
+              </button>
             </div>
           </div>
         ))}
