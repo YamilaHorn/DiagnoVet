@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { AppHeader } from "../components/AppHeader";
+import { useReactToPrint } from "react-to-print";
+import { ReportePDF } from "../components/ReportePDF";
 
 type Props = {
   images: string[];
@@ -32,6 +34,13 @@ export function AnalysisCasePage({
   const [isZoomed, setIsZoomed] = useState(false);
   
   const recognitionRef = useRef<any>(null);
+  const componentRef = useRef<HTMLDivElement>(null); 
+
+  // Configuración de impresión (Actualizada para la versión nueva)
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: `Informe_${patientData.animalName || 'Veterinario'}`,
+  });
   
   const aiGeneratedText = `Se observa en el paciente ${patientData.animalName || "N/A"} una pared vesical de 4.2mm con pérdida de la diferenciación de capas. Los hallazgos ecográficos son compatibles con un cuadro de cistitis crónica activa.`;
 
@@ -169,7 +178,7 @@ export function AnalysisCasePage({
             </div>
           </div>
 
-          {/* 2. CARRUSEL (SOLO PANTALLA) */}
+          {/* 2. CARRUSEL */}
           {images && images.length > 0 && (
             <div className="mb-10 no-print">
               <div className="relative group aspect-video rounded-[2.5rem] overflow-hidden bg-slate-900 shadow-2xl border-4 border-white">
@@ -197,7 +206,7 @@ export function AnalysisCasePage({
             {report.study}
           </h2>
 
-          {/* DATOS DEL PACIENTE (OCULTA VACÍOS EN IMPRESIÓN) */}
+          {/* DATOS DEL PACIENTE */}
           <div className="grid grid-cols-3 gap-x-8 gap-y-6 mb-10 bg-[#F8FAFC] p-8 rounded-[2rem] border border-slate-100 print:bg-transparent print:border-t-2 print:border-b-2 print:border-slate-900 print:rounded-none">
             <EditableInfo label="Paciente" value={report.patient} onChange={(v) => handleFieldChange('patient', v)} />
             <EditableInfo label="Tutor" value={report.tutor} onChange={(v) => handleFieldChange('tutor', v)} />
@@ -231,7 +240,7 @@ export function AnalysisCasePage({
             )}
           </div>
 
-          {/* FIRMA */}
+          {/* FIRMA (UI PANTALLA) */}
           <div className="mt-16 flex flex-col items-end px-12 pb-10">
             <div className="w-64 text-center">
               <div className="h-24 flex items-end justify-center mb-2">
@@ -247,36 +256,35 @@ export function AnalysisCasePage({
             </div>
           </div>
 
-          {/* 4. GALERÍA FINAL (SOLO PARA IMPRESIÓN) */}
-          <div className="hidden print:block border-t-2 border-slate-100 pt-10 mt-10">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Anexo: Capturas del Estudio</p>
-            <div className="grid grid-cols-2 gap-4">
-              {images.map((img, i) => (
-                <div key={i} className="aspect-video rounded-xl overflow-hidden border border-slate-200">
-                  <img src={img} className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* BOTONES */}
           <div className="no-print flex flex-col md:flex-row gap-4 mt-12 pt-8 border-t border-slate-100">
             <button onClick={handleSave} disabled={showVisualFeedback} className={`flex-1 h-16 rounded-2xl font-black text-lg transition-all shadow-xl flex items-center justify-center gap-3 ${showVisualFeedback ? "bg-green-500 text-white" : "bg-slate-900 text-white hover:bg-black"}`}>
               {showVisualFeedback ? "✔ REPORTE GUARDADO" : "GUARDAR CAMBIOS"}
             </button>
             <div className="flex gap-4 flex-1">
-              <button onClick={() => window.print()} className="flex-1 bg-[#2FB8B3]/10 text-[#2FB8B3] h-16 rounded-2xl font-black text-sm hover:bg-[#2FB8B3]/20 transition-all flex items-center justify-center gap-2">PDF / IMPRIMIR</button>
+              <button onClick={() => handlePrint()} className="flex-1 bg-[#2FB8B3]/10 text-[#2FB8B3] h-16 rounded-2xl font-black text-sm hover:bg-[#2FB8B3]/20 transition-all flex items-center justify-center gap-2">PDF / IMPRIMIR</button>
               <button onClick={() => isSaved ? onFinish() : setShowExitAlert(true)} className="px-8 bg-white border-2 border-slate-200 text-slate-500 h-16 rounded-2xl font-black text-sm hover:border-slate-900 hover:text-slate-900 transition-all uppercase">Finalizar</button>
             </div>
           </div>
         </section>
       </main>
+
+      {/* COMPONENTE DE IMPRESIÓN (OCULTO) */}
+      <div style={{ display: "none" }}>
+        <ReportePDF 
+          ref={componentRef} 
+          data={report} 
+          images={images} 
+          doctor={doctorName} 
+          clinic={clinicName} 
+          signature={localStorage.getItem("doctorSignature")}
+        />
+      </div>
     </div>
   );
 }
 
 function EditableInfo({ label, value, onChange }: { label: string, value: string, onChange: (v: string) => void }) {
-  // Si no hay valor, ocultamos el bloque entero en la impresión
   if (!value && typeof window !== 'undefined' && window.matchMedia('print').matches) return null;
 
   return (
@@ -286,7 +294,7 @@ function EditableInfo({ label, value, onChange }: { label: string, value: string
         value={value} 
         onChange={(e) => onChange(e.target.value)} 
         placeholder="..."
-        className="font-bold text-slate-800 outline-none bg-transparent text-sm pb-2 placeholder:text-slate-200 print:pb-0" 
+        className="font-bold text-slate-800 outline-none bg-transparent text-sm pb-2 placeholder:text-slate-200 print:pb-0 uppercase" 
       />
     </div>
   );
