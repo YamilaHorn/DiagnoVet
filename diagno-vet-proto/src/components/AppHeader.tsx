@@ -14,50 +14,53 @@ export function AppHeader({
   logoLink,
 }: AppHeaderProps) {
   return (
-    <header className="bg-white border-b border-gray-100 px-6 py-4">
-      <div className="max-w-7xl mx-auto grid grid-cols-3 items-center">
-        
-        {/* LEFT */}
-        <div className="flex items-center gap-4 justify-start">
-          {logoLink ? (
-            <a href={logoLink}>
+    <header className="bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between gap-4">
+
+          {/* LEFT */}
+          <div className="flex items-center gap-4 shrink-0">
+            {logoLink ? (
+              <a href={logoLink}>
+                <img
+                  src="/logo.png"
+                  alt="DiagnoVetAI"
+                  className="h-8 w-auto cursor-pointer hover:opacity-80 transition"
+                />
+              </a>
+            ) : (
               <img
                 src="/logo.png"
                 alt="DiagnoVetAI"
-                className="h-8 w-auto cursor-pointer hover:opacity-80 transition"
+                className="h-8 w-auto"
               />
-            </a>
-          ) : (
-            <img
-              src="/logo.png"
-              alt="DiagnoVetAI"
-              className="h-8 w-auto"
-            />
-          )}
+            )}
 
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition"
-            >
-              ← <span className="hidden sm:inline">Back</span>
-            </button>
-          )}
-        </div>
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition whitespace-nowrap"
+              >
+                ← <span className="hidden sm:inline">Back</span>
+              </button>
+            )}
+          </div>
 
-        {/* CENTER */}
-        <div className="flex justify-center">
+          {/* CENTER */}
           {title && (
-            <h1 className="text-sm sm:text-base font-medium text-gray-900 text-center">
-              {title}
-            </h1>
+            <div className="flex-1 text-center">
+              <h1 className="text-sm sm:text-base font-medium text-gray-900 truncate">
+                {title}
+              </h1>
+            </div>
           )}
-        </div>
 
-        {/* RIGHT */}
-        <div className="flex items-center gap-4 justify-end">
-          {right}
-          <LanguageSwitcher />
+          {/* RIGHT */}
+          <div className="flex items-center gap-4 shrink-0 whitespace-nowrap">
+            {right}
+            <LanguageSwitcher />
+          </div>
+
         </div>
       </div>
     </header>

@@ -16,3 +16,32 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 .PhoneInputCountry {
   @apply mr-2;
 }
+
+@media print {
+  /* Oculta todo lo que no sea el reporte (Header, botones, carrusel, etc.) */
+  .no-print, 
+  nav, 
+  button, 
+  header, 
+  footer {
+    display: none !important;
+  }
+
+  /* Asegura que el contenedor principal use todo el ancho del papel */
+  main {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Quita fondos grises y usa blanco puro para ahorrar tinta y verse clínico */
+  body {
+    background-color: white !important;
+  }
+
+  /* Ajusta las columnas para que no se amontonen */
+  .grid {
+    display: block !important;
+  }
+}
