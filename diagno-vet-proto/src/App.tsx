@@ -25,6 +25,7 @@ const INITIAL_PATIENT_DATA = {
   reason: "",
   studyType: "",
   diagnostico: "",
+  images: [], // Aseguramos que inicie vacío
 };
 
 const INITIAL_PROFILE = {
@@ -52,7 +53,6 @@ export default function App() {
 
   // --- PERSISTENCIA DE SESIÓN ---
   useEffect(() => {
-    // Al cargar la app, vemos si hay una sesión activa de la última vez
     const lastSessionEmail = localStorage.getItem("lastSessionEmail");
     if (lastSessionEmail) {
       const savedProfile = localStorage.getItem(`userProfile_${lastSessionEmail}`);
@@ -66,22 +66,18 @@ export default function App() {
     }
   }, []);
 
-  // --- LÓGICA DE LOGIN (CORREGIDA) ---
+  // --- LÓGICA DE LOGIN ---
   const handleLoginAction = (email: string, isNew: boolean) => {
     const cleanEmail = email.toLowerCase().trim();
-    
-    // Intentamos recuperar datos específicos de ESTE email
     const existingProfile = localStorage.getItem(`userProfile_${cleanEmail}`);
     const existingClinic = localStorage.getItem(`clinicData_${cleanEmail}`);
 
     if (existingProfile && existingClinic) {
-      // Si el usuario ya existía en este navegador, cargamos sus datos
       setProfileData(JSON.parse(existingProfile));
       setClinicData(JSON.parse(existingClinic));
       localStorage.setItem("lastSessionEmail", cleanEmail);
       setStep("dashboard");
     } else {
-      // SI ES NUEVO O NO TIENE DATOS: Limpiamos los estados por completo
       setProfileData({ ...INITIAL_PROFILE, email: cleanEmail });
       setClinicData(INITIAL_CLINIC);
       setStep("preConfirmation");
@@ -90,7 +86,6 @@ export default function App() {
 
   const handleCompleteRegistration = () => {
     const emailKey = profileData.email;
-    // Guardamos con llaves únicas por email para que no se mezclen
     localStorage.setItem(`userProfile_${emailKey}`, JSON.stringify(profileData));
     localStorage.setItem(`clinicData_${emailKey}`, JSON.stringify(clinicData));
     localStorage.setItem("lastSessionEmail", emailKey);
@@ -98,7 +93,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("lastSessionEmail"); // Solo cerramos sesión, no borramos los datos del disco
+    localStorage.removeItem("lastSessionEmail");
     setProfileData(INITIAL_PROFILE);
     setClinicData(INITIAL_CLINIC);
     setStep("login");
@@ -110,7 +105,13 @@ export default function App() {
     setStep("dashboard");
   };
 
+  // --- CORRECCIÓN AQUÍ: CARGA DE REPORTE ---
   const handleEditReport = (study: any) => {
+    // 1. Seteamos las imágenes en el estado global inmediatamente
+    const reportImages = study.images || [];
+    setUploadedImages(reportImages);
+
+    // 2. Seteamos los datos del paciente incluyendo las imágenes
     setPatientData({
       id: study.id, 
       animalName: study.patient || "",
@@ -120,10 +121,12 @@ export default function App() {
       age: study.age || "",
       weight: study.weight || "",
       studyType: study.study || "",
-      reason: study.observaciones || "",
+      reason: study.observaciones || "", // Mapeo de observaciones a reason
       diagnostico: study.diagnostico || "",
+      images: reportImages // Guardamos las imágenes también dentro de patientData
     });
-    setUploadedImages(study.images || []);
+
+    // 3. Saltamos directo a la edición
     setStep("analysisCase"); 
   };
 
@@ -158,45 +161,45 @@ export default function App() {
       );
 
     case "dashboard":
-  return (
-    <DashboardPage
-      userProfile={profileData} 
-      onLogout={handleLogout}    
-      onCreateReport={() => {
-        setPatientData(INITIAL_PATIENT_DATA);
-        setUploadedImages([]);
-        setStep("analyze");
-      }}
-      onEditReport={handleEditReport}
-    />
-  );
+      return (
+        <DashboardPage
+          userProfile={profileData} 
+          onLogout={handleLogout}    
+          onCreateReport={() => {
+            setPatientData(INITIAL_PATIENT_DATA);
+            setUploadedImages([]);
+            setStep("analyze");
+          }}
+          onEditReport={handleEditReport}
+        />
+      );
 
     case "analyze":
-  return (
-    <AnalyzePage
-      data={patientData}
-      onChange={setPatientData}
-      images={uploadedImages}
-      onUpdateImages={setUploadedImages}
-      onFinish={() => setStep("analysisCase")}
-      onBack={handleBackToDashboard}
-      userProfile={profileData}
-      clinicData={clinicData}
-    />
-  );
+      return (
+        <AnalyzePage
+          data={patientData}
+          onChange={setPatientData}
+          images={uploadedImages}
+          onUpdateImages={setUploadedImages}
+          onFinish={() => setStep("analysisCase")}
+          onBack={handleBackToDashboard}
+          userProfile={profileData}
+          clinicData={clinicData}
+        />
+      );
 
     case "analysisCase":
-  return (
-    <AnalysisCasePage
-      images={uploadedImages}
-      patientData={patientData}
-      doctorName={profileData.fullName}
-      doctorEmail={profileData.email}
-      clinicName={clinicData.clinicName} 
-      onBack={() => setStep("analyze")}
-      onFinish={handleBackToDashboard}
-    />
-  );
+      return (
+        <AnalysisCasePage
+          images={uploadedImages} // Ahora garantizamos que tiene los datos del handleEditReport
+          patientData={patientData}
+          doctorName={profileData.fullName}
+          doctorEmail={profileData.email}
+          clinicName={clinicData.clinicName} 
+          onBack={() => setStep("analyze")}
+          onFinish={handleBackToDashboard}
+        />
+      );
 
     default:
       return null;
