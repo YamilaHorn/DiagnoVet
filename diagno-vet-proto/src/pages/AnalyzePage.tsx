@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { AppHeader } from "../components/AppHeader";
 
-export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, onBack }: any) {
+// Agregamos userProfile y clinicData a las props
+export function AnalyzePage({ 
+  data, 
+  onChange, 
+  images, 
+  onUpdateImages, 
+  onFinish, 
+  onBack,
+  userProfile, // <--- Nuevo
+  clinicData   // <--- Nuevo
+}: any) {
   const [isListening, setIsListening] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -9,7 +19,6 @@ export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, 
     onChange({ ...data, [field]: value });
   };
 
-  // VALIDACIÓN DE CAMPOS OBLIGATORIOS
   const isValid = 
     data.animalName?.trim() && 
     data.studyType?.trim() && 
@@ -50,7 +59,6 @@ export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, 
     recognition.start();
   };
 
-  // ESTILOS DE GAMA UNIFICADA (Finos y elegantes)
   const inputFocusClass = "focus:border-[#2FB8B3] focus:ring-4 focus:ring-[#2FB8B3]/5";
   const inputBaseClass = "w-full bg-white border border-slate-200 rounded-2xl p-4 font-bold text-slate-700 outline-none transition-all shadow-sm";
 
@@ -71,7 +79,6 @@ export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, 
                </div>
             </div>
 
-            {/* FILA 1: PACIENTE Y TUTOR */}
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Nombre del Animal *</label>
@@ -83,7 +90,6 @@ export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, 
               </div>
             </div>
 
-            {/* FILA 2: ESTUDIO Y GÉNERO */}
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Tipo de Estudio *</label>
@@ -107,7 +113,6 @@ export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, 
               </div>
             </div>
 
-            {/* FILA 3: ESPECIE, EDAD, PESO */}
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Especie</label>
@@ -138,17 +143,39 @@ export function AnalyzePage({ data, onChange, images, onUpdateImages, onFinish, 
               <textarea value={data.reason || ""} onChange={(e) => updateField("reason", e.target.value)} rows={4} className={`${inputBaseClass} ${inputFocusClass} resize-none !rounded-[2rem]`} placeholder="Escriba o dicte los motivos de consulta..." />
             </div>
 
-            <div className="p-6 bg-slate-900 rounded-[2rem] text-white flex justify-between items-center shadow-xl">
-               <div>
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Médico Responsable</p>
-                  <p className="text-lg font-bold uppercase tracking-tight">Nicolas Alborno</p>
-               </div>
-               <div className="h-10 w-[2px] bg-slate-700/50 mx-4"></div>
-               <div className="flex-1">
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Centro Clínico</p>
-                  <p className="text-sm font-medium opacity-80 uppercase">DIAGNOVET Especialidades</p>
-               </div>
-            </div>
+            {/* SECCIÓN DINÁMICA DE MÉDICO Y CLÍNICA */}
+            <div className="p-8 bg-slate-900 rounded-[2rem] text-white flex items-center shadow-xl border border-white/5">
+   
+   {/* Bloque Médico */}
+   <div className="flex-1">
+      <p className="text-[9px] font-black text-[#2FB8B3] uppercase tracking-[0.2em] mb-1">
+        Médico Responsable
+      </p>
+      <h3 className="text-xl font-bold uppercase tracking-tight leading-none">
+        {userProfile.fullName || "Nombre no configurado"}
+      </h3>
+      <p className="text-[11px] opacity-50 font-medium mt-1">
+        {userProfile.title || "Especialidad"}
+      </p>
+   </div>
+
+   {/* Separador Vertical Estilizado */}
+   <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-slate-700 to-transparent mx-8"></div>
+
+   {/* Bloque Clínica */}
+   <div className="flex-1">
+      <p className="text-[9px] font-black text-[#2FB8B3] uppercase tracking-[0.2em] mb-1">
+        Centro Clínico
+      </p>
+      <h3 className="text-lg font-bold uppercase tracking-tight leading-none">
+        {clinicData.clinicName || "Clínica no configurada"}
+      </h3>
+      <p className="text-[11px] opacity-50 font-medium mt-1">
+        Sede Central
+      </p>
+   </div>
+
+</div>
 
             <button 
               onClick={onFinish} 

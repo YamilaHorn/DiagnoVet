@@ -3,8 +3,9 @@ import { AppHeader } from "../components/AppHeader";
 import { Loader } from "../components/Loader";
 
 type Props = {
-  onExistingUser: () => void;
-  onNewUser: () => void;
+  //props reciben el email como argumento
+  onExistingUser: (email: string) => void;
+  onNewUser: (email: string) => void;
 };
 
 export function LoginPage({ onExistingUser, onNewUser }: Props) {
@@ -24,10 +25,24 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
 
     setTimeout(() => {
       setLoading(false);
-      if (email.toLowerCase().includes("new")) {
-        onNewUser();
+      
+      // Buscamos el perfil guardado
+      const savedProfileStr = localStorage.getItem("userProfile");
+      const currentEmail = email.toLowerCase().trim();
+
+      if (savedProfileStr) {
+        const savedProfile = JSON.parse(savedProfileStr);
+        
+        // ¿El email que escribió es el mismo que el del perfil guardado?
+        if (savedProfile.email?.toLowerCase() === currentEmail) {
+          onExistingUser(currentEmail);
+        } else {
+          // Si el email es distinto, lo tratamos como usuario nuevo 
+          onNewUser(currentEmail);
+        }
       } else {
-        onExistingUser();
+        // No hay nadie registrado en este navegador
+        onNewUser(currentEmail);
       }
     }, 1200);
   };
@@ -75,13 +90,6 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
               )}
             </div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-100 text-red-700 text-xs font-bold px-4 py-3 rounded-xl">
-                {error}
-              </div>
-            )}
-
-            {/* BOTÓN CON TU COLOR #2FB8B3 Y TU ESTRUCTURA ORIGINAL */}
             <button
               type="submit"
               disabled={!isValidEmail || loading}
@@ -117,7 +125,7 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
             <p className="text-xs text-slate-400 font-medium">
               ¿No tienes cuenta? <br />
               <span className="text-slate-500">
-                Ingresa tu email y te ayudaremos a crear una.
+                Si el email no coincide con el perfil activo, iniciaremos un registro nuevo.
               </span>
             </p>
           </footer>
