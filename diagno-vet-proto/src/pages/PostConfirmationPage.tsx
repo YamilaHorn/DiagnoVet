@@ -22,7 +22,11 @@ export function PostConfirmationPage({
 }: Props) {
   const { phone, title, fullName, license } = data;
 
-  const isValid = phone && title.trim() && fullName.trim();
+  // Validación corregida: asegura que los campos obligatorios tengan contenido real
+  const isValid = 
+    (phone && phone.trim().length > 5) && 
+    title.trim().length > 0 && 
+    fullName.trim().length > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +34,8 @@ export function PostConfirmationPage({
     onContinue();
   };
 
-  const inputClass = "w-full mt-1 px-5 py-3.5 bg-white border border-slate-200 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none transition-all text-slate-700 shadow-sm";
+  // Input con el color de foco #2FB8B3
+  const inputClass = "w-full mt-1 px-5 py-3.5 bg-white border border-slate-200 rounded-xl focus:border-[#2FB8B3] focus:ring-4 focus:ring-[#2FB8B3]/5 outline-none transition-all text-slate-700 shadow-sm";
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
@@ -40,13 +45,14 @@ export function PostConfirmationPage({
         <div className="w-full max-w-5xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-16">
 
           <div className="flex flex-col justify-center">
-            <div className="inline-block w-fit px-4 py-1 bg-blue-50 text-blue-700 rounded-full text-[12px] font-bold uppercase tracking-wider mb-6">
+            {/* Badge Step 2 */}
+            <div className="inline-block w-fit px-4 py-1 bg-[#2FB8B3]/10 text-[#2FB8B3] rounded-full text-[12px] font-bold uppercase tracking-wider mb-6">
               Step 2 of 2
             </div>
 
             <h1 className="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight">
               Personaliza tu <br /> 
-              <span className="text-blue-600 font-black">Perfil Profesional</span>
+              <span className="text-[#2FB8B3] font-black">Perfil Profesional</span>
             </h1>
 
             <p className="text-slate-500 mb-10 text-lg leading-relaxed">
@@ -59,7 +65,7 @@ export function PostConfirmationPage({
                 { t: "Configuración Rápida", d: "Solo toma un minuto y puedes editarlo después." }
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                  <div className="flex-shrink-0 w-12 h-12 bg-[#2FB8B3]/10 rounded-2xl flex items-center justify-center text-[#2FB8B3]">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>
@@ -81,7 +87,7 @@ export function PostConfirmationPage({
               <div className="mt-1 custom-phone-input">
                 <PhoneInput
                   international
-                  defaultCountry="AR"
+                  defaultCountry="CA"
                   value={phone}
                   onChange={(value) => onChange({ ...data, phone: value || "" })}
                   className="w-full"
@@ -96,7 +102,7 @@ export function PostConfirmationPage({
               <select
                 value={title}
                 onChange={(e) => onChange({ ...data, title: e.target.value })}
-                className={inputClass}
+                className={`${inputClass} appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20stroke%3D%27%2364748b%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271.5%27%20d%3D%27m6%208%204%204%204-4%27%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat`}
               >
                 <option value="">Selecciona tu título</option>
                 <option value="Veterinarian">Médico Veterinario</option>
@@ -134,7 +140,7 @@ export function PostConfirmationPage({
               <button
                 type="submit"
                 disabled={!isValid}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white h-16 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 group disabled:bg-slate-200 disabled:text-slate-400 shadow-xl shadow-blue-600/10"
+                className="w-full bg-[#2FB8B3] hover:bg-[#25918d] text-white h-16 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 group disabled:bg-slate-200 disabled:text-slate-400 shadow-xl shadow-[#2FB8B3]/20 disabled:shadow-none active:scale-[0.98]"
               >
                 Completar Registro
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,6 +151,21 @@ export function PostConfirmationPage({
           </form>
         </div>
       </div>
+
+      <style>{`
+        .custom-phone-input .PhoneInputInput {
+          width: 100%;
+          background: white;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.75rem;
+          padding: 0.875rem 1.25rem;
+          outline: none;
+        }
+        .custom-phone-input .PhoneInputInput:focus {
+          border-color: #2FB8B3;
+          box-shadow: 0 0 0 4px rgba(47, 184, 179, 0.05);
+        }
+      `}</style>
     </div>
   );
 }

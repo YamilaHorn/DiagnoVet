@@ -21,7 +21,12 @@ export function PreConfirmationPage({
 }: Props) {
   const { clinicName, address, phone } = data;
 
-  const isValid = clinicName.trim() && address.trim() && phone.trim();
+  // MEJORA: Validación más estricta. 
+  // Nos aseguramos de que cada campo tenga una longitud mínima real.
+  const isValid = 
+    clinicName.trim().length > 0 && 
+    address.trim().length > 0 && 
+    (phone && phone.trim().length > 5); // El teléfono suele requerir más caracteres
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +34,7 @@ export function PreConfirmationPage({
     onContinue();
   };
 
-  const inputClass = "w-full mt-1 px-5 py-3.5 bg-white border border-slate-200 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none transition-all text-slate-700 shadow-sm";
+  const inputClass = "w-full mt-1 px-5 py-3.5 bg-white border border-slate-200 rounded-xl focus:border-[#2FB8B3] focus:ring-4 focus:ring-[#2FB8B3]/5 outline-none transition-all text-slate-700 shadow-sm";
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
@@ -39,13 +44,13 @@ export function PreConfirmationPage({
         <div className="w-full max-w-5xl bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-16">
           
           <div className="flex flex-col justify-center">
-            <div className="inline-block w-fit px-4 py-1 bg-blue-50 text-blue-700 rounded-full text-[12px] font-bold uppercase tracking-wider mb-6">
+            <div className="inline-block w-fit px-4 py-1 bg-[#2FB8B3]/10 text-[#2FB8B3] rounded-full text-[12px] font-bold uppercase tracking-wider mb-6">
               Step 1 of 2
             </div>
 
             <h1 className="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight">
               Información de <br /> 
-              <span className="text-blue-600 font-black">la Veterinaria</span>
+              <span className="text-[#2FB8B3] font-black">la Veterinaria</span>
             </h1>
 
             <p className="text-slate-500 mb-10 text-lg leading-relaxed">
@@ -58,7 +63,7 @@ export function PreConfirmationPage({
                 { t: "Cumplimiento Legal", d: "Aseguramos que la información cumpla con los estándares requeridos." }
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                  <div className="flex-shrink-0 w-12 h-12 bg-[#2FB8B3]/10 rounded-2xl flex items-center justify-center text-[#2FB8B3]">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
@@ -103,11 +108,9 @@ export function PreConfirmationPage({
               </label>
               <div className="mt-1 custom-phone-input">
                 <PhoneInput
-                  defaultCountry="AR"
+                  defaultCountry="CA"
                   value={phone}
-                  onChange={(value) =>
-                    onChange({ ...data, phone: value || "" })
-                  }
+                  onChange={(val) => onChange({ ...data, phone: val || "" })}
                   placeholder="Ej: 555 123 4567"
                 />
               </div>
@@ -121,7 +124,7 @@ export function PreConfirmationPage({
               <button
                 type="submit"
                 disabled={!isValid}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white h-16 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 group disabled:bg-slate-200 disabled:text-slate-400 shadow-xl shadow-blue-600/10"
+                className="w-full bg-[#2FB8B3] hover:bg-[#25918d] text-white h-16 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 group disabled:bg-slate-200 disabled:text-slate-400 shadow-xl shadow-[#2FB8B3]/20 disabled:shadow-none active:scale-[0.98]"
               >
                 Siguiente Paso
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,6 +135,21 @@ export function PreConfirmationPage({
           </form>
         </div>
       </div>
+
+      <style>{`
+        .custom-phone-input .PhoneInputInput {
+          width: 100%;
+          background: white;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.75rem;
+          padding: 0.875rem 1.25rem;
+          outline: none;
+        }
+        .custom-phone-input .PhoneInputInput:focus {
+          border-color: #2FB8B3;
+          box-shadow: 0 0 0 4px rgba(47, 184, 179, 0.05);
+        }
+      `}</style>
     </div>
   );
 }

@@ -14,18 +14,29 @@ type AppStep =
   | "analyze"
   | "analysisCase";
 
+const INITIAL_PATIENT_DATA = {
+  id: null, // Importante para diferenciar nuevo de editado
+  animalName: "",
+  tutorName: "",
+  species: "Canino",
+  gender: "",
+  age: "",
+  weight: "",
+  reason: "",
+  studyType: "",
+  diagnostico: "", // Añadido para persistir el texto de la IA
+};
+
 export default function App() {
   const [step, setStep] = useState<AppStep>("login");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
-  // Datos de la Clínica (Step 1 del Setup)
   const [clinicData, setClinicData] = useState({
     clinicName: "",
     address: "",
     phone: "",
   });
 
-  // Datos del Veterinario (Step 2 del Setup)
   const [profileData, setProfileData] = useState({
     phone: "",
     title: "",
@@ -33,7 +44,34 @@ export default function App() {
     license: "",
   });
 
-  // --- LÓGICA DE RENDERIZADO (Router Mock) ---
+  const [patientData, setPatientData] = useState(INITIAL_PATIENT_DATA);
+
+  const handleBackToDashboard = () => {
+    setPatientData(INITIAL_PATIENT_DATA);
+    setUploadedImages([]);
+    setStep("dashboard");
+  };
+
+  // --- FUNCIÓN DE EDICIÓN CORREGIDA ---
+  const handleEditReport = (study: any) => {
+    // Sincronizamos los nombres de las propiedades del Dashboard con el estado del Editor
+    setPatientData({
+      id: study.id, // PASAMOS EL ID ORIGINAL
+      animalName: study.patient || "",
+      tutorName: study.tutor || "",
+      species: study.species || "Canino",
+      gender: study.gender || "",
+      age: study.age || "",
+      weight: study.weight || "",
+      studyType: study.study || "",
+      reason: study.observaciones || "",
+      diagnostico: study.diagnostico || "", // PASAMOS EL TEXTO YA ESCRITO
+    });
+
+    setUploadedImages(study.images || []);
+    setStep("analysisCase"); // Saltamos directo al editor final
+  };
+
   switch (step) {
     case "login":
       return (
@@ -67,29 +105,34 @@ export default function App() {
       return (
         <DashboardPage
           onCreateReport={() => {
-            setUploadedImages([]); // Limpiamos imágenes para un nuevo caso
+            setPatientData(INITIAL_PATIENT_DATA);
+            setUploadedImages([]);
             setStep("analyze");
           }}
+          onEditReport={handleEditReport}
         />
       );
 
     case "analyze":
       return (
         <AnalyzePage
-          // Aquí capturamos el array de strings (URLs/Blobs) de las fotos subidas
-          onFinish={(images: string[]) => {
-            setUploadedImages(images);
-            setStep("analysisCase");
-          }}
-          onBack={() => setStep("dashboard")}
+          data={patientData}
+          onChange={setPatientData}
+          images={uploadedImages}
+          onUpdateImages={setUploadedImages}
+          onFinish={() => setStep("analysisCase")}
+          onBack={handleBackToDashboard}
         />
       );
 
     case "analysisCase":
       return (
-        <AnalysisCasePage 
-          images={uploadedImages} // Pasamos las fotos reales al reporte final
-          onBack={() => setStep("dashboard")} 
+        <AnalysisCasePage
+          images={uploadedImages}
+          patientData={patientData}
+          doctorName={profileData.fullName}
+          onBack={() => setStep("analyze")}
+          onFinish={handleBackToDashboard}
         />
       );
 

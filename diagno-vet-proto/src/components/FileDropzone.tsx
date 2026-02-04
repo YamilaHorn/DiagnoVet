@@ -19,11 +19,9 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
   const [items, setItems] = useState<UploadItem[]>([]);
   const [message, setMessage] = useState<string | null>(null);
 
-  // --- FUNCIÓN PARA ELIMINAR ---
   const removeItem = (id: string) => {
     setItems((prev) => {
       const next = prev.filter((it) => it.id !== id);
-      // Notificamos al componente padre (AnalyzePage) para actualizar el contador
       if (onUploadComplete) {
         const completedFiles = next
           .filter((p) => p.status === "done")
@@ -195,7 +193,6 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
               </div>
             </div>
 
-            {/* BOTÓN ELIMINAR (TACHITO) */}
             <div className="ml-4">
               <button 
                 onClick={() => removeItem(it.id)}
