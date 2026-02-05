@@ -132,7 +132,7 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
       <div
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
-        className="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center bg-white hover:bg-slate-50 transition-colors"
+        className="border-2 border-dashed border-slate-200 rounded-xl p-6 sm:p-8 text-center bg-white hover:bg-slate-50 transition-colors"
       >
         <p className="text-sm text-slate-500 font-medium">Arrastrá archivos aquí o</p>
         <label className="inline-block mt-3 cursor-pointer">
@@ -143,7 +143,7 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
             onChange={(e) => handleFiles(e.target.files)}
             accept={ALLOWED_TYPES.join(",")}
           />
-          <span className="px-6 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 text-sm font-bold transition-all">
+          <span className="px-4 py-2 sm:px-6 sm:py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 text-sm font-bold transition-all">
             Seleccionar archivos
           </span>
         </label>
@@ -159,26 +159,26 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
         {items.map((it) => (
           <div
             key={it.id}
-            className="flex items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm"
+            className="flex flex-col sm:flex-row items-start sm:items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm"
           >
             {it.preview ? (
               <img
                 src={it.preview}
                 alt={it.file.name}
-                className="w-12 h-12 object-cover rounded-lg mr-4 border border-slate-100"
+                className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg mr-0 sm:mr-4 mb-3 sm:mb-0 border border-slate-100"
               />
             ) : (
-              <div className="w-12 h-12 flex items-center justify-center bg-slate-50 rounded-lg mr-4 text-[10px] font-bold text-slate-400">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center bg-slate-50 rounded-lg mr-0 sm:mr-4 mb-3 sm:mb-0 text-[10px] font-bold text-slate-400">
                 {it.file.type.split("/").pop()?.toUpperCase()}
               </div>
             )}
 
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-center mb-1">
-                <div className="text-sm font-bold text-slate-700 truncate pr-2">
+            <div className="flex-1 min-w-0 w-full">
+              <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-1">
+                <div className="text-sm font-bold text-slate-700 truncate pr-2 w-full">
                   {it.file.name}
                 </div>
-                <div className="text-[10px] font-black text-slate-400 uppercase">
+                <div className="text-[10px] font-black text-slate-400 uppercase mt-2 sm:mt-0">
                   {it.status === "uploading" ? `${it.progress}%` : it.status === "done" ? "Ready" : "Queued"}
                 </div>
               </div>
@@ -193,7 +193,7 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
               </div>
             </div>
 
-            <div className="ml-4">
+            <div className="ml-0 sm:ml-4 mt-3 sm:mt-0">
               <button 
                 onClick={() => removeItem(it.id)}
                 className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"

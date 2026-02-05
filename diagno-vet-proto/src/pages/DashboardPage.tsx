@@ -89,7 +89,7 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
         }
       />
 
-      <main className="flex-1 px-6 py-12 max-w-7xl mx-auto w-full">
+      <main className="flex-1 px-4 md:px-6 py-6 md:py-12 max-w-7xl mx-auto w-full">
         <section className="mb-12">
           <h1 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">
             {t.welcome} <span className="text-[#2FB8B3]">Dr. {userProfile?.fullName?.split(' ')[0] || t.vet_default}</span>
@@ -133,7 +133,7 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
 
         <section className="space-y-6">
           <div className="bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
-            <div className="hidden md:grid grid-cols-5 bg-slate-50/50 px-10 py-4 border-b border-slate-50">
+            <div className="hidden md:grid grid-cols-5 bg-slate-50/50 px-6 md:px-10 py-4 border-b border-slate-50">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_patient}</p>
               <p className="text-[10px) font-black text-slate-400 uppercase tracking-widest">{t.table_tutor}</p>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_study}</p>
@@ -144,26 +144,26 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
             <div className="divide-y divide-slate-50">
               {filteredStudies.length > 0 ? (
                 filteredStudies.map((study) => (
-                  <div key={study.id} className="grid grid-cols-1 md:grid-cols-5 items-center px-10 py-6 hover:bg-slate-50/50 transition-colors group">
-                    <div className="flex items-center gap-4">
+                  <div key={study.id} className="flex flex-col md:grid md:grid-cols-5 items-start md:items-center px-4 md:px-10 py-6 hover:bg-slate-50/50 transition-colors group gap-3">
+                    <div className="flex items-center gap-4 w-full md:w-auto">
                       <div className="w-10 h-10 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 font-black text-xs group-hover:bg-[#2FB8B3]/10 group-hover:text-[#2FB8B3] transition-colors">
                         {(study.patient || "P")[0]}
                       </div>
-                      <div>
-                        <p className="font-black text-slate-800 leading-none">{study.patient}</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-black text-slate-800 leading-none truncate">{study.patient}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 truncate">
                           {DATA_TRANSLATIONS[lang][study.species] || study.species}
                         </p>
                       </div>
                     </div>
-                    <div className="text-sm font-bold text-slate-500">{study.tutor}</div>
-                    <div>
-                      <p className="text-sm font-black text-slate-800">
+                    <div className="text-sm font-bold text-slate-500 w-full md:w-auto">{study.tutor}</div>
+                    <div className="w-full md:w-auto">
+                      <p className="text-sm font-black text-slate-800 truncate">
                         {DATA_TRANSLATIONS[lang][study.study] || study.study}
                       </p>
                       <p className="text-[10px] font-bold text-slate-400 uppercase">{study.date}</p>
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center w-full md:w-auto">
                       <span className={`text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest ${
                         study.status === 'Finalizado' || study.status === 'Finished' 
                           ? 'bg-slate-100 text-slate-400' 
@@ -172,7 +172,7 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
                         {study.status === 'Finalizado' || study.status === 'Finished' ? t.status_finished : t.status_progress}
                       </span>
                     </div>
-                    <div className="flex justify-end gap-3 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-3 md:opacity-0 group-hover:opacity-100 transition-opacity w-full md:w-auto">
                       <button onClick={() => onEditReport && onEditReport(study)} className="p-2 hover:bg-white rounded-xl shadow-sm text-slate-400 hover:text-[#2FB8B3] transition-all"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
                       <button onClick={() => handleDelete(study.id)} className="p-2 hover:bg-white rounded-xl shadow-sm text-slate-400 hover:text-red-400 transition-all"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                     </div>

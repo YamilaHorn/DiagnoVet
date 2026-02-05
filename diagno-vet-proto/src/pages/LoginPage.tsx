@@ -46,8 +46,8 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
       {/* El AppHeader ya tiene el Switcher adentro, así que esto funciona solo */}
       <AppHeader />
 
-      <div className="flex-1 flex items-center justify-center px-6">
-        <div className="w-full max-w-[440px] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-10 md:p-14">
+      <div className="flex-1 flex items-center justify-center px-4 md:px-6">
+        <div className="w-full max-w-[440px] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2.5rem] p-8 md:p-14">
           <div className="text-center mb-10">
             <div className="flex justify-center mb-6">
               <img

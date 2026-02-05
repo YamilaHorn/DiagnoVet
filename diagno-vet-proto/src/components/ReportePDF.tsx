@@ -59,8 +59,8 @@ export const ReportePDF = React.forwardRef<HTMLDivElement, ReportePDFProps>(
     return (
       <div 
         ref={ref} 
-        className="bg-white text-black p-12 font-serif" 
-        style={{ width: '210mm', minHeight: '297mm', margin: '0 auto' }}
+        className="bg-white text-black p-6 md:p-12 font-serif" 
+        style={{ width: '100%', maxWidth: '210mm', minHeight: '297mm', margin: '0 auto' }}
       >
         {/* ENCABEZADO MÉDICO */}
         <div className="flex justify-between border-b-2 border-black pb-4 mb-8">
@@ -84,7 +84,7 @@ export const ReportePDF = React.forwardRef<HTMLDivElement, ReportePDFProps>(
         </div>
 
         {/* GRILLA DE DATOS DEL PACIENTE */}
-        <div className="grid grid-cols-2 gap-x-12 gap-y-3 mb-10 py-6 border-y border-gray-100 font-sans">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3 mb-10 py-6 border-y border-gray-100 font-sans">
           <DataRow label={t.patient} value={data.patient} />
           <DataRow label={t.tutor} value={data.tutor} />
           <DataRow label={t.species} value={data.species} />
@@ -109,9 +109,9 @@ export const ReportePDF = React.forwardRef<HTMLDivElement, ReportePDFProps>(
         </div>
 
         {/* SECCIÓN DE FIRMA DINÁMICA */}
-        <div className="flex justify-end mb-16 px-8">
-          <div className="w-64 text-center">
-            <div className="h-24 flex items-end justify-center mb-2">
+        <div className="flex justify-end mb-16 px-4 md:px-8">
+          <div className="w-full md:w-64 text-center">
+            <div className="h-20 md:h-24 flex items-end justify-center mb-2">
               {signature ? (
                 <img 
                   src={signature} 
@@ -135,7 +135,7 @@ export const ReportePDF = React.forwardRef<HTMLDivElement, ReportePDFProps>(
             <p className="text-[9px] font-bold uppercase text-gray-400 mb-6 tracking-widest text-center">
               {t.annex_title}
             </p>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {images.map((img, i) => (
                 <div key={i} className="aspect-video rounded border border-gray-200 overflow-hidden shadow-sm bg-gray-50">
                   <img src={img} className="w-full h-full object-cover" alt={`Capture ${i + 1}`} />

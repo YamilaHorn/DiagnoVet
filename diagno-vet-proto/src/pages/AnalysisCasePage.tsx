@@ -232,7 +232,7 @@ export function AnalysisCasePage({
             {report.study}
           </h2>
 
-          <div className="grid grid-cols-3 gap-x-8 gap-y-6 mb-10 bg-[#F8FAFC] p-8 rounded-[2rem] border border-slate-100 print:bg-transparent print:border-t-2 print:border-b-2 print:border-slate-900 print:rounded-none">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6 mb-10 bg-[#F8FAFC] p-6 md:p-8 rounded-[2rem] border border-slate-100 print:bg-transparent print:border-t-2 print:border-b-2 print:border-slate-900 print:rounded-none">
             <EditableInfo label={lang === "es" ? "Paciente" : "Patient"} value={report.patient} onChange={(v) => handleFieldChange('patient', v)} />
             <EditableInfo label={lang === "es" ? "Tutor" : "Owner"} value={report.tutor} onChange={(v) => handleFieldChange('tutor', v)} />
             <EditableInfo label={lang === "es" ? "Especie" : "Species"} value={report.species} onChange={(v) => handleFieldChange('species', v)} />
@@ -315,7 +315,7 @@ function EditableInfo({ label, value, onChange }: { label: string, value: string
         value={value} 
         onChange={(e) => onChange(e.target.value)} 
         placeholder="..."
-        className="font-bold text-slate-800 outline-none bg-transparent text-sm pb-2 placeholder:text-slate-200 print:pb-0 uppercase" 
+        className="font-bold text-slate-800 outline-none bg-transparent text-sm pb-2 placeholder:text-slate-200 print:pb-0 uppercase border-0 rounded-none" 
       />
     </div>
   );

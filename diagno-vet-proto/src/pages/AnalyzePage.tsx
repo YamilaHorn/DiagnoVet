@@ -111,10 +111,10 @@ export function AnalyzePage({
       {/* Ocultamos el selector de idioma aquí */}
       <AppHeader title={t.header_title} onBack={onBack} showLanguageSelector={false} />
 
-      <main className="flex-1 flex overflow-hidden">
-        
-        <div className="w-full lg:w-[55%] p-8 overflow-y-auto border-r border-slate-100 text-slate-700">
-          <section className="bg-white rounded-[2.5rem] p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-slate-100 space-y-8">
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+
+        <div className="w-full lg:w-[55%] p-6 md:p-8 overflow-y-auto lg:border-r border-slate-100 text-slate-700">
+          <section className="bg-white rounded-[2.5rem] p-6 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-slate-100 space-y-8">
             <div className="flex justify-between items-center">
                <h2 className="text-2xl font-black text-slate-800 tracking-tight">🐾 {t.main_title}</h2>
                <div className="text-right">
@@ -123,7 +123,7 @@ export function AnalyzePage({
                </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">{t.label_animal_name} *</label>
                 <input type="text" value={data.animalName || ""} onChange={(e) => updateField("animalName", e.target.value)} className={`${inputBaseClass} ${inputFocusClass}`} placeholder={t.placeholder_animal} />
@@ -134,7 +134,7 @@ export function AnalyzePage({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">{t.label_study_type} *</label>
                 <select value={data.studyType || ""} onChange={(e) => updateField("studyType", e.target.value)} className={`${inputBaseClass} ${inputFocusClass} cursor-pointer`}>
@@ -157,7 +157,7 @@ export function AnalyzePage({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">{t.label_species}</label>
                 <select value={data.species || "Canino"} onChange={(e) => updateField("species", e.target.value)} className={`${inputBaseClass} ${inputFocusClass} cursor-pointer`}>
@@ -223,7 +223,7 @@ export function AnalyzePage({
           </section>
         </div>
 
-        <div className="w-full lg:w-[45%] bg-[#F8FAFC] p-8 flex flex-col overflow-hidden">
+        <div className="w-full lg:w-[45%] bg-[#F8FAFC] p-6 md:p-8 flex flex-col overflow-hidden mt-6 lg:mt-0">
           <div className="flex justify-between items-end mb-6 px-2">
             <div>
               <h3 className="font-black text-slate-800 text-xl tracking-tight">{t.images_title} ({images.length})</h3>
@@ -237,22 +237,22 @@ export function AnalyzePage({
             onDrop={handleDrop}
             className={`flex-1 overflow-y-auto rounded-[2.5rem] p-6 transition-all border-2 border-dashed ${isDragging ? "bg-[#2FB8B3]/5 border-[#2FB8B3] scale-[0.99]" : "bg-white border-slate-200 shadow-sm"}`}
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               {images.map((src: any, i: number) => (
-                <div key={i} className="relative aspect-square bg-slate-100 rounded-3xl overflow-hidden shadow-sm group border border-slate-100">
+                <div key={i} className="relative sm:aspect-square h-28 sm:h-auto bg-slate-100 rounded-3xl overflow-hidden shadow-sm group border border-slate-100">
                   <img src={src} className="w-full h-full object-cover" />
                   <button 
                     onClick={() => onUpdateImages(images.filter((_: any, idx: number) => idx !== i))} 
-                    className="absolute top-3 right-3 bg-red-500 text-white w-8 h-8 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600 z-10"
+                    className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600 z-10"
                   >
                     <span className="text-xs font-black">✕</span>
                   </button>
                 </div>
               ))}
               
-              <label className="aspect-square bg-slate-50 border border-dashed border-slate-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-[#2FB8B3]/5 hover:border-[#2FB8B3] transition-all group">
-                <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#2FB8B3] text-2xl group-hover:scale-110 transition-transform font-bold">+</div>
-                <p className="text-[10px] font-black text-slate-400 uppercase mt-4 tracking-widest">{t.btn_upload}</p>
+              <label className="h-28 sm:aspect-square bg-slate-50 border border-dashed border-slate-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-[#2FB8B3]/5 hover:border-[#2FB8B3] transition-all group">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#2FB8B3] text-2xl group-hover:scale-110 transition-transform font-bold">+</div>
+                <p className="text-[10px] font-black text-slate-400 uppercase mt-3 tracking-widest">{t.btn_upload}</p>
                 <input type="file" multiple className="hidden" onChange={handleImageUpload} />
               </label>
             </div>

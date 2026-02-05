@@ -42,8 +42,8 @@ export function PreConfirmationPage({
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
       <AppHeader title={t.header_title} onBack={onBack} />
 
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-5xl bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-16">
+      <div className="flex-1 flex items-center justify-center px-4 md:px-6 py-8 md:py-12">
+        <div className="w-full max-w-5xl bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-6 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-16">
           
           <div className="flex flex-col justify-center">
             <div className="inline-block w-fit px-4 py-1 bg-[#2FB8B3]/10 text-[#2FB8B3] rounded-full text-[12px] font-bold uppercase tracking-wider mb-6">
