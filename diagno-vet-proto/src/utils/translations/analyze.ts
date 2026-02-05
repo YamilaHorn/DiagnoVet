@@ -19,7 +19,7 @@ export const analyzeTranslations: any = {
     doctor_responsible: "Responsible Doctor",
     clinic_center: "Clinical Center",
     hq_label: "Headquarters",
-    btn_continue: "CONTINUE TO ANALYSIS",
+    btn_continue: "CONTINUE",
     images_title: "Images",
     images_min_req: "Minimum 1 image required *",
     btn_upload: "Upload Image"
@@ -44,7 +44,7 @@ export const analyzeTranslations: any = {
     doctor_responsible: "Médico Responsable",
     clinic_center: "Centro Clínico",
     hq_label: "Sede Central",
-    btn_continue: "CONTINUAR AL ANÁLISIS",
+    btn_continue: "CONTINUAR",
     images_title: "Imágenes",
     images_min_req: "Mínimo 1 imagen requerida *",
     btn_upload: "Subir Imagen"

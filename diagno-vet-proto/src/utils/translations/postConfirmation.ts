@@ -18,7 +18,7 @@ export const postConfirmationTranslations = {
     placeholder_title: "Selecciona tu título",
     placeholder_name: "Ej: Dr. Nicolás Alborno",
     placeholder_license: "Ej: MP 12345",
-    btn_complete: "Completar Registro",
+    btn_complete: "Continuar",
     options: {
       vet: "Médico Veterinario",
       tech: "Técnico Veterinario",
@@ -46,7 +46,7 @@ export const postConfirmationTranslations = {
     placeholder_title: "Select your title",
     placeholder_name: "e.g., Dr. Nicholas Smith",
     placeholder_license: "e.g., Lic. 12345",
-    btn_complete: "Complete Registration",
+    btn_complete: "Continue",
     options: {
       vet: "Veterinary Doctor",
       tech: "Veterinary Technician",

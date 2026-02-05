@@ -16,7 +16,7 @@ export const preConfirmationTranslations = {
     placeholder_address: "Av. Universidad 450, Ciudad de México",
     placeholder_phone: "Número telefónico",
     footer_note: "Esta información podrá ser actualizada posteriormente en el panel de configuración.",
-    btn_next: "Continuar al siguiente paso"
+    btn_next: "Continuar"
   },
   en: {
     step: "Step 1 of 2",
@@ -35,6 +35,6 @@ export const preConfirmationTranslations = {
     placeholder_address: "123 Main St, New York, NY",
     placeholder_phone: "Phone number",
     footer_note: "This information can be updated later in the settings panel.",
-    btn_next: "Proceed to next step"
+    btn_next: "Continue"
   }
 };
