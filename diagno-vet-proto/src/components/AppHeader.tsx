@@ -16,7 +16,6 @@ export function AppHeader({
   title,
   onBack,
   right,
-  logoLink,
   userProfile,
   onLogout,
   showLanguageSelector = true, // Por defecto es true
