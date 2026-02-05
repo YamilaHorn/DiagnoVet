@@ -1,0 +1,58 @@
+export const postConfirmationTranslations = {
+  es: {
+    step: "Paso 2 de 2",
+    header_title: "Configuración de cuenta",
+    title_main: "Personaliza tu",
+    title_highlight: "Perfil Profesional",
+    greeting: "Hola",
+    description: ". Estos datos aparecerán en los encabezados de tus reportes generados por la IA.",
+    feature_1_title: "Reportes Profesionales",
+    feature_1_desc: "Tu nombre y matrícula aparecerán en cada diagnóstico oficial.",
+    feature_2_title: "Sincronización IA",
+    feature_2_desc: "Configura tu perfil una vez y genera reportes en segundos.",
+    label_phone: "Número de Teléfono *",
+    label_title: "Título Profesional *",
+    label_name: "Nombre Completo *",
+    label_license: "Matrícula Profesional",
+    label_optional: "(Opcional)",
+    placeholder_title: "Selecciona tu título",
+    placeholder_name: "Ej: Dr. Nicolás Alborno",
+    placeholder_license: "Ej: MP 12345",
+    btn_complete: "Completar Registro",
+    options: {
+      vet: "Médico Veterinario",
+      tech: "Técnico Veterinario",
+      director: "Director de Clínica",
+      specialist: "Especialista",
+      other: "Otro"
+    }
+  },
+  en: {
+    step: "Step 2 of 2",
+    header_title: "Account Setup",
+    title_main: "Customize your",
+    title_highlight: "Professional Profile",
+    greeting: "Hello",
+    description: ". This information will appear in the headers of your AI-generated reports.",
+    feature_1_title: "Professional Reports",
+    feature_1_desc: "Your name and license number will appear on every official diagnostic.",
+    feature_2_title: "AI Synchronization",
+    feature_2_desc: "Set up your profile once and generate reports in seconds.",
+    label_phone: "Phone Number *",
+    label_title: "Professional Title *",
+    label_name: "Full Name *",
+    label_license: "Professional License",
+    label_optional: "(Optional)",
+    placeholder_title: "Select your title",
+    placeholder_name: "e.g., Dr. Nicholas Smith",
+    placeholder_license: "e.g., Lic. 12345",
+    btn_complete: "Complete Registration",
+    options: {
+      vet: "Veterinary Doctor",
+      tech: "Veterinary Technician",
+      director: "Clinic Director",
+      specialist: "Specialist",
+      other: "Other"
+    }
+  }
+};

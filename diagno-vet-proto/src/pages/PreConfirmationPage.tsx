@@ -1,6 +1,8 @@
 import { AppHeader } from "../components/AppHeader";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { useLanguage } from "../context/LanguageContext";
+import { preConfirmationTranslations } from "../utils/translations/preConfirmation";
 
 type Props = {
   data: {
@@ -19,14 +21,14 @@ export function PreConfirmationPage({
   onContinue,
   onBack,
 }: Props) {
+  const { lang } = useLanguage();
+  const t = preConfirmationTranslations[lang];
   const { clinicName, address, phone } = data;
 
-  // MEJORA: Validación más estricta. 
-  // Nos aseguramos de que cada campo tenga una longitud mínima real.
   const isValid = 
     clinicName.trim().length > 0 && 
     address.trim().length > 0 && 
-    (phone && phone.trim().length > 5); // El teléfono suele requerir más caracteres
+    (phone && phone.trim().length > 5);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,29 +40,29 @@ export function PreConfirmationPage({
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
-      <AppHeader title="Account setup" onBack={onBack} />
+      <AppHeader title={t.header_title} onBack={onBack} />
 
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-5xl bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-16">
           
           <div className="flex flex-col justify-center">
             <div className="inline-block w-fit px-4 py-1 bg-[#2FB8B3]/10 text-[#2FB8B3] rounded-full text-[12px] font-bold uppercase tracking-wider mb-6">
-              Step 1 of 2
+              {t.step}
             </div>
 
             <h1 className="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight">
-              Información de <br /> 
-              <span className="text-[#2FB8B3] font-black">la Veterinaria</span>
+              {t.title_main} <br /> 
+              <span className="text-[#2FB8B3] font-black">{t.title_highlight}</span>
             </h1>
 
             <p className="text-slate-500 mb-10 text-lg leading-relaxed">
-              Necesitamos los datos básicos de tu clínica para configurar el entorno de trabajo y los reportes.
+              {t.description}
             </p>
 
             <div className="space-y-6">
               {[
-                { t: "Identidad del Centro", d: "El nombre de tu clínica aparecerá en los diagnósticos compartidos." },
-                { t: "Cumplimiento Legal", d: "Aseguramos que la información cumpla con los estándares requeridos." }
+                { t: t.feature_1_title, d: t.feature_1_desc },
+                { t: t.feature_2_title, d: t.feature_2_desc }
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-[#2FB8B3]/10 rounded-2xl flex items-center justify-center text-[#2FB8B3]">
@@ -80,44 +82,44 @@ export function PreConfirmationPage({
           <form onSubmit={handleSubmit} className="bg-slate-50/50 p-8 rounded-[2rem] border border-slate-100 flex flex-col justify-center space-y-6">
             <div>
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
-                Nombre Legal de la Clínica *
+                {t.label_clinic_name}
               </label>
               <input
                 value={clinicName}
                 onChange={(e) => onChange({ ...data, clinicName: e.target.value })}
-                placeholder="Ej: Clínica Veterinaria San Juan"
+                placeholder={t.placeholder_clinic}
                 className={inputClass}
               />
             </div>
 
             <div>
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
-                Dirección Física *
+                {t.label_address}
               </label>
               <input
                 value={address}
                 onChange={(e) => onChange({ ...data, address: e.target.value })}
-                placeholder="Ej: Av. Principal 123, Ciudad"
+                placeholder={t.placeholder_address}
                 className={inputClass}
               />
             </div>
 
             <div>
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">
-                Teléfono de Contacto *
+                {t.label_phone}
               </label>
               <div className="mt-1 custom-phone-input">
                 <PhoneInput
                   defaultCountry="CA"
                   value={phone}
                   onChange={(val) => onChange({ ...data, phone: val || "" })}
-                  placeholder="Ej: 555 123 4567"
+                  placeholder={t.placeholder_phone}
                 />
               </div>
             </div>
 
             <p className="text-[11px] text-slate-400 text-center uppercase tracking-tight">
-              Podrás editar esta información luego en ajustes.
+              {t.footer_note}
             </p>
 
             <div className="pt-2">
@@ -126,7 +128,7 @@ export function PreConfirmationPage({
                 disabled={!isValid}
                 className="w-full bg-[#2FB8B3] hover:bg-[#25918d] text-white h-16 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 group disabled:bg-slate-200 disabled:text-slate-400 shadow-xl shadow-[#2FB8B3]/20 disabled:shadow-none active:scale-[0.98]"
               >
-                Siguiente Paso
+                {t.btn_next}
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

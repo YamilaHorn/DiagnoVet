@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { AppHeader } from "../components/AppHeader";
+import { useLanguage } from "../context/LanguageContext";
+import { dashboardTranslations } from "../utils/translations/dashboard";
 
 type Props = {
   onCreateReport?: () => void;
@@ -9,6 +11,9 @@ type Props = {
 };
 
 export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLogout }: Props) {
+  const { lang } = useLanguage();
+  const t = dashboardTranslations[lang];
+  
   const [studies, setStudies] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -21,7 +26,7 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
   }, [userProfile.email]);
 
   const handleDelete = (id: number) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este reporte?")) {
+    if (window.confirm(t.delete_confirm)) {
       const allReports = JSON.parse(localStorage.getItem("reports") || "[]");
       const updatedAll = allReports.filter((s: any) => s.id !== id);
       localStorage.setItem("reports", JSON.stringify(updatedAll));
@@ -37,7 +42,6 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
-      {/* HEADER ACTUALIZADO: Limpiamos la prop 'right' y activamos el menú con userProfile */}
       <AppHeader
         userProfile={userProfile}
         onLogout={onLogout}
@@ -47,7 +51,7 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
             className="bg-[#2FB8B3] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#25918d] transition-all shadow-lg shadow-[#2FB8B3]/20 flex items-center gap-2"
           >
             <span className="text-xl leading-none">+</span>
-            Nuevo Reporte
+            {t.btn_new_report}
           </button>
         }
       />
@@ -55,18 +59,18 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
       <main className="flex-1 px-6 py-12 max-w-7xl mx-auto w-full">
         <section className="mb-12">
           <h1 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">
-            Bienvenido, <span className="text-[#2FB8B3]">Dr. {userProfile?.fullName?.split(' ')[0] || "Veterinario"}</span>
+            {t.welcome} <span className="text-[#2FB8B3]">Dr. {userProfile?.fullName?.split(' ')[0] || t.vet_default}</span>
           </h1>
           <p className="text-slate-500 text-lg max-w-2xl leading-relaxed">
-            Gestiona tus casos clínicos y reportes asistidos por IA.
+            {t.subtitle}
           </p>
         </section>
 
         {/* METRICS */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <MetricCard title="Mis Reportes" value={studies.length.toString()} icon="file" />
-          <MetricCard title="Pacientes" value={[...new Set(studies.map(s => s.patient))].length.toString()} icon="users" />
-          <MetricCard title="Especialidad" value={userProfile?.title?.split(' ')[0] || "Vet"} icon="bolt" />
+          <MetricCard title={t.metric_reports} value={studies.length.toString()} icon="file" />
+          <MetricCard title={t.metric_patients} value={[...new Set(studies.map(s => s.patient))].length.toString()} icon="users" />
+          <MetricCard title={t.metric_specialty} value={userProfile?.title?.split(' ')[0] || "Vet"} icon="bolt" />
         </section>
 
         {/* SEARCH BAR */}
@@ -79,14 +83,14 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
             </span>
             <input 
               type="text" 
-              placeholder="Buscar entre mis reportes..." 
+              placeholder={t.search_placeholder} 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-white border border-slate-100 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-[#2FB8B3] focus:ring-4 focus:ring-[#2FB8B3]/5 transition-all shadow-sm text-sm font-bold text-slate-600 placeholder:text-slate-300 placeholder:font-medium"
             />
           </div>
           <h2 className="hidden md:block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
-            Mostrando {filteredStudies.length} reportes personales
+            {t.showing_prefix} {filteredStudies.length} {t.showing_suffix}
           </h2>
         </section>
 
@@ -94,11 +98,11 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
         <section className="space-y-6">
           <div className="bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
             <div className="hidden md:grid grid-cols-5 bg-slate-50/50 px-10 py-4 border-b border-slate-50">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Paciente</p>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tutor</p>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estudio</p>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Estado</p>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Acciones</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_patient}</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_tutor}</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_study}</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">{t.table_status}</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{t.table_actions}</p>
             </div>
 
             <div className="divide-y divide-slate-50">
@@ -121,9 +125,11 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
                     </div>
                     <div className="flex justify-center">
                       <span className={`text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest ${
-                        study.status === 'Finalizado' ? 'bg-slate-100 text-slate-400' : 'bg-[#2FB8B3]/10 text-[#2FB8B3]'
+                        study.status === 'Finalizado' || study.status === 'Finished' 
+                          ? 'bg-slate-100 text-slate-400' 
+                          : 'bg-[#2FB8B3]/10 text-[#2FB8B3]'
                       }`}>
-                        {study.status || "En progreso"}
+                        {study.status === 'Finalizado' || study.status === 'Finished' ? t.status_finished : t.status_progress}
                       </span>
                     </div>
                     <div className="flex justify-end gap-3 md:opacity-0 group-hover:opacity-100 transition-opacity">
@@ -134,8 +140,8 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
                 ))
               ) : (
                 <div className="py-20 text-center">
-                  <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No tienes reportes guardados todavía.</p>
-                  <button onClick={onCreateReport} className="mt-4 text-[#2FB8B3] font-black text-xs uppercase tracking-tighter hover:underline">Crear mi primer reporte</button>
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">{t.empty_title}</p>
+                  <button onClick={onCreateReport} className="mt-4 text-[#2FB8B3] font-black text-xs uppercase tracking-tighter hover:underline">{t.empty_btn}</button>
                 </div>
               )}
             </div>

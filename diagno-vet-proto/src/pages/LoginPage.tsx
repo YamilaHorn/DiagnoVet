@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { AppHeader } from "../components/AppHeader";
 import { Loader } from "../components/Loader";
+import { useLanguage } from "../context/LanguageContext"; // 1. Importamos el hook
+import { loginTranslations } from "../utils/translations/login"; // 2. Importamos los textos
 
 type Props = {
-  //props reciben el email como argumento
   onExistingUser: (email: string) => void;
   onNewUser: (email: string) => void;
 };
 
 export function LoginPage({ onExistingUser, onNewUser }: Props) {
+  // 3. "Pescamos" el idioma actual (es o en)
+  const { lang } = useLanguage();
+  const t = loginTranslations[lang]; // Atajo para no escribir tanto
+
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isValidEmail = emailRegex.test(email);
@@ -20,28 +24,18 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
     e.preventDefault();
     if (!isValidEmail) return;
 
-    setError(null);
     setLoading(true);
 
     setTimeout(() => {
       setLoading(false);
-      
-      // Buscamos el perfil guardado
-      const savedProfileStr = localStorage.getItem("userProfile");
       const currentEmail = email.toLowerCase().trim();
+      
+      // Buscamos si existe un perfil para este email específico
+      const savedProfileStr = localStorage.getItem(`userProfile_${currentEmail}`);
 
       if (savedProfileStr) {
-        const savedProfile = JSON.parse(savedProfileStr);
-        
-        // ¿El email que escribió es el mismo que el del perfil guardado?
-        if (savedProfile.email?.toLowerCase() === currentEmail) {
-          onExistingUser(currentEmail);
-        } else {
-          // Si el email es distinto, lo tratamos como usuario nuevo 
-          onNewUser(currentEmail);
-        }
+        onExistingUser(currentEmail);
       } else {
-        // No hay nadie registrado en este navegador
         onNewUser(currentEmail);
       }
     }, 1200);
@@ -49,6 +43,7 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col font-sans">
+      {/* El AppHeader ya tiene el Switcher adentro, así que esto funciona solo */}
       <AppHeader />
 
       <div className="flex-1 flex items-center justify-center px-6">
@@ -62,21 +57,21 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
               />
             </div>
 
-            <p className="text-slate-500 leading-relaxed">
-              Ingresa tu email para acceder a la plataforma de diagnóstico.
+            <p className="text-slate-500 leading-relaxed italic">
+              {t.title} {/* 4. Usamos la traducción */}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">
-                Email Address
+                {t.email_label} {/* 4. Usamos la traducción */}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="doctor@clinic.com"
+                placeholder={t.email_placeholder} // 4. Usamos la traducción
                 className={`w-full mt-2 px-6 py-4 rounded-2xl outline-none transition-all ${
                   email && !isValidEmail
                     ? "border-red-200 bg-red-50 text-red-900"
@@ -85,7 +80,7 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
               />
               {email && !isValidEmail && (
                 <p className="mt-2 text-xs font-bold text-red-500 ml-1">
-                  Por favor ingresa un email válido
+                  {t.email_error} {/* 4. Usamos la traducción */}
                 </p>
               )}
             </div>
@@ -98,11 +93,11 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
               {loading ? (
                 <div className="flex items-center gap-3">
                   <Loader />
-                  <span className="animate-pulse">Verificando...</span>
+                  <span className="animate-pulse">{t.btn_verifying}</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  Continuar
+                  {t.btn_continue} {/* 4. Usamos la traducción */}
                   <svg
                     className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                     fill="none"
@@ -122,10 +117,10 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
           </form>
 
           <footer className="mt-10 text-center">
-            <p className="text-xs text-slate-400 font-medium">
-              ¿No tienes cuenta? <br />
+            <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              {t.footer_new_account} <br />
               <span className="text-slate-500">
-                Si el email no coincide con el perfil activo, iniciaremos un registro nuevo.
+                {t.footer_info}
               </span>
             </p>
           </footer>

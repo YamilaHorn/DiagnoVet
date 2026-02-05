@@ -1,0 +1,40 @@
+export const preConfirmationTranslations = {
+  es: {
+    step: "Paso 1 de 2",
+    header_title: "Configuración de cuenta",
+    title_main: "Información de",
+    title_highlight: "la Clínica Veterinaria",
+    description: "Para garantizar la precisión de los informes y el cumplimiento de los estándares profesionales, solicitamos los datos básicos de su centro médico.",
+    feature_1_title: "Identidad Institucional",
+    feature_1_desc: "El nombre legal del centro se incluirá en el encabezado de todos los diagnósticos generados.",
+    feature_2_title: "Validez Profesional",
+    feature_2_desc: "Aseguramos que la documentación emitida cumpla con los requisitos de contacto y ubicación necesarios.",
+    label_clinic_name: "Nombre Legal de la Clínica *",
+    label_address: "Dirección Física Institucional *",
+    label_phone: "Teléfono de Contacto Profesional *",
+    placeholder_clinic: "Ej: Hospital Veterinario de Especialidades",
+    placeholder_address: "Av. Universidad 450, Ciudad de México",
+    placeholder_phone: "Número telefónico",
+    footer_note: "Esta información podrá ser actualizada posteriormente en el panel de configuración.",
+    btn_next: "Continuar al siguiente paso"
+  },
+  en: {
+    step: "Step 1 of 2",
+    header_title: "Account Setup",
+    title_main: "Veterinary",
+    title_highlight: "Clinic Information",
+    description: "To ensure report accuracy and professional standards compliance, please provide your medical center's primary information.",
+    feature_1_title: "Institutional Identity",
+    feature_1_desc: "The legal clinic name will be displayed on the header of all generated diagnostics.",
+    feature_2_title: "Professional Validity",
+    feature_2_desc: "We ensure all issued documentation meets necessary contact and location requirements.",
+    label_clinic_name: "Legal Clinic Name *",
+    label_address: "Physical Institutional Address *",
+    label_phone: "Professional Contact Phone *",
+    placeholder_clinic: "e.g., Veterinary Specialty Hospital",
+    placeholder_address: "123 Main St, New York, NY",
+    placeholder_phone: "Phone number",
+    footer_note: "This information can be updated later in the settings panel.",
+    btn_next: "Proceed to next step"
+  }
+};

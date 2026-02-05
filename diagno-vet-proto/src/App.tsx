@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { LanguageProvider } from "./context/LanguageContext";
 import { LoginPage } from "./pages/LoginPage";
 import { PreConfirmationPage } from "./pages/PreConfirmationPage";
 import { PostConfirmationPage } from "./pages/PostConfirmationPage";
@@ -6,6 +7,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { AnalyzePage } from "./pages/AnalyzePage";
 import { AnalysisCasePage } from "./pages/AnalysisCasePage";
 
+// --- TIPOS DE NAVEGACIÓN ---
 type AppStep =
   | "login"
   | "preConfirmation"
@@ -14,6 +16,7 @@ type AppStep =
   | "analyze"
   | "analysisCase";
 
+// --- ESTADOS INICIALES ---
 const INITIAL_PATIENT_DATA = {
   id: null, 
   animalName: "",
@@ -25,7 +28,7 @@ const INITIAL_PATIENT_DATA = {
   reason: "",
   studyType: "",
   diagnostico: "",
-  images: [], // Aseguramos que inicie vacío
+  images: [],
 };
 
 const INITIAL_PROFILE = {
@@ -43,10 +46,9 @@ const INITIAL_CLINIC = {
 };
 
 export default function App() {
+  // --- ESTADOS PRINCIPALES ---
   const [step, setStep] = useState<AppStep>("login");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-
-  // --- ESTADOS DE USUARIO ---
   const [clinicData, setClinicData] = useState(INITIAL_CLINIC);
   const [profileData, setProfileData] = useState(INITIAL_PROFILE);
   const [patientData, setPatientData] = useState(INITIAL_PATIENT_DATA);
@@ -66,8 +68,8 @@ export default function App() {
     }
   }, []);
 
-  // --- LÓGICA DE LOGIN ---
-  const handleLoginAction = (email: string, isNew: boolean) => {
+  // --- LÓGICA DE LOGIN Y REGISTRO ---
+  const handleLoginAction = (email: string) => {
     const cleanEmail = email.toLowerCase().trim();
     const existingProfile = localStorage.getItem(`userProfile_${cleanEmail}`);
     const existingClinic = localStorage.getItem(`clinicData_${cleanEmail}`);
@@ -99,19 +101,17 @@ export default function App() {
     setStep("login");
   };
 
+  // --- LÓGICA DE REPORTES ---
   const handleBackToDashboard = () => {
     setPatientData(INITIAL_PATIENT_DATA);
     setUploadedImages([]);
     setStep("dashboard");
   };
 
-  // --- CORRECCIÓN AQUÍ: CARGA DE REPORTE ---
   const handleEditReport = (study: any) => {
-    // 1. Seteamos las imágenes en el estado global inmediatamente
     const reportImages = study.images || [];
     setUploadedImages(reportImages);
 
-    // 2. Seteamos los datos del paciente incluyendo las imágenes
     setPatientData({
       id: study.id, 
       animalName: study.patient || "",
@@ -121,87 +121,98 @@ export default function App() {
       age: study.age || "",
       weight: study.weight || "",
       studyType: study.study || "",
-      reason: study.observaciones || "", // Mapeo de observaciones a reason
+      reason: study.observaciones || "",
       diagnostico: study.diagnostico || "",
-      images: reportImages // Guardamos las imágenes también dentro de patientData
+      images: reportImages
     });
 
-    // 3. Saltamos directo a la edición
     setStep("analysisCase"); 
   };
 
-  // --- RENDERIZADO ---
-  switch (step) {
-    case "login":
-      return (
-        <LoginPage
-          onExistingUser={(email) => handleLoginAction(email, false)}
-          onNewUser={(email) => handleLoginAction(email, true)}
-        />
-      );
+  // --- RENDERIZADO DE PASOS ---
+  const renderStep = () => {
+    switch (step) {
+      case "login":
+        return (
+          <LoginPage
+            onExistingUser={handleLoginAction}
+            onNewUser={handleLoginAction}
+          />
+        );
 
-    case "preConfirmation":
-      return (
-        <PreConfirmationPage
-          data={clinicData}
-          onChange={setClinicData}
-          onContinue={() => setStep("postConfirmation")}
-          onBack={() => setStep("login")}
-        />
-      );
+      case "preConfirmation":
+        return (
+          <PreConfirmationPage
+            data={clinicData}
+            onChange={setClinicData}
+            onContinue={() => setStep("postConfirmation")}
+            onBack={() => setStep("login")}
+          />
+        );
 
-    case "postConfirmation":
-      return (
-        <PostConfirmationPage
-          data={profileData}
-          onChange={setProfileData}
-          onContinue={handleCompleteRegistration}
-          onBack={() => setStep("preConfirmation")}
-        />
-      );
+      case "postConfirmation":
+        return (
+          <PostConfirmationPage
+            data={profileData}
+            onChange={setProfileData}
+            onContinue={handleCompleteRegistration}
+            onBack={() => setStep("preConfirmation")}
+          />
+        );
 
-    case "dashboard":
-      return (
-        <DashboardPage
-          userProfile={profileData} 
-          onLogout={handleLogout}    
-          onCreateReport={() => {
-            setPatientData(INITIAL_PATIENT_DATA);
-            setUploadedImages([]);
-            setStep("analyze");
-          }}
-          onEditReport={handleEditReport}
-        />
-      );
+      case "dashboard":
+        return (
+          <DashboardPage
+            userProfile={profileData} 
+            onLogout={handleLogout}    
+            onCreateReport={() => {
+              setPatientData(INITIAL_PATIENT_DATA);
+              setUploadedImages([]);
+              setStep("analyze");
+            }}
+            onEditReport={handleEditReport}
+          />
+        );
 
-    case "analyze":
-      return (
-        <AnalyzePage
-          data={patientData}
-          onChange={setPatientData}
-          images={uploadedImages}
-          onUpdateImages={setUploadedImages}
-          onFinish={() => setStep("analysisCase")}
-          onBack={handleBackToDashboard}
-          userProfile={profileData}
-          clinicData={clinicData}
-        />
-      );
+      case "analyze":
+        return (
+          <AnalyzePage
+            data={patientData}
+            onChange={setPatientData}
+            images={uploadedImages}
+            onUpdateImages={setUploadedImages}
+            onFinish={() => setStep("analysisCase")}
+            onBack={handleBackToDashboard}
+            userProfile={profileData}
+            clinicData={clinicData}
+          />
+        );
 
-    case "analysisCase":
-      return (
-        <AnalysisCasePage
-          images={uploadedImages} // Ahora garantizamos que tiene los datos del handleEditReport
-          patientData={patientData}
-          doctorName={profileData.fullName}
-          doctorEmail={profileData.email}
-          clinicName={clinicData.clinicName} 
-          onBack={() => setStep("analyze")}
-          onFinish={handleBackToDashboard}
-        />
-      );
+      case "analysisCase":
+        return (
+          <AnalysisCasePage
+            images={uploadedImages}
+            patientData={patientData}
+            doctorName={profileData.fullName}
+            doctorEmail={profileData.email}
+            clinicName={clinicData.clinicName} 
+            onBack={() => setStep("analyze")}
+            onFinish={handleBackToDashboard}
+            userProfile={profileData}
+            onLogout={handleLogout}
+          />
+        );
 
-    default:
-      return null;
-  }
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <LanguageProvider>
+      <div className="min-h-screen bg-[#FDFDFD]">
+        {renderStep()}
+      </div>
+    </LanguageProvider>
+  );
 }
