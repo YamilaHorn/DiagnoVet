@@ -16,9 +16,54 @@ type AppStep =
   | "analyze"
   | "analysisCase";
 
+// --- TIPOS DE DATOS ---
+type PatientData = {
+  id?: number | null;
+  animalName: string;
+  tutorName: string;
+  species: string;
+  gender: string;
+  age: string;
+  weight: string;
+  reason: string;
+  studyType: string;
+  diagnostico: string;
+  images: string[];
+};
+
+type ProfileData = {
+  email: string;
+  phone: string;
+  title: string;
+  fullName: string;
+  license: string;
+};
+
+type ClinicData = {
+  clinicName: string;
+  address: string;
+  phone: string;
+};
+
+type ReportSummary = {
+  id?: number;
+  patient?: string;
+  tutor?: string;
+  study?: string;
+  species?: string;
+  date?: string;
+  status?: string;
+  observaciones?: string;
+  diagnostico?: string;
+  images?: string[];
+  gender?: string;
+  age?: string;
+  weight?: string;
+};
+
 // --- ESTADOS INICIALES ---
-const INITIAL_PATIENT_DATA = {
-  id: null, 
+const INITIAL_PATIENT_DATA: PatientData = {
+  id: null,
   animalName: "",
   tutorName: "",
   species: "Canino",
@@ -31,7 +76,7 @@ const INITIAL_PATIENT_DATA = {
   images: [],
 };
 
-const INITIAL_PROFILE = {
+const INITIAL_PROFILE: ProfileData = {
   email: "",
   phone: "",
   title: "",
@@ -39,7 +84,7 @@ const INITIAL_PROFILE = {
   license: "",
 };
 
-const INITIAL_CLINIC = {
+const INITIAL_CLINIC: ClinicData = {
   clinicName: "",
   address: "",
   phone: "",
@@ -49,22 +94,29 @@ export default function App() {
   // --- ESTADOS PRINCIPALES ---
   const [step, setStep] = useState<AppStep>("login");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [clinicData, setClinicData] = useState(INITIAL_CLINIC);
-  const [profileData, setProfileData] = useState(INITIAL_PROFILE);
-  const [patientData, setPatientData] = useState(INITIAL_PATIENT_DATA);
+  const [clinicData, setClinicData] = useState<ClinicData>(INITIAL_CLINIC);
+  const [profileData, setProfileData] = useState<ProfileData>(INITIAL_PROFILE);
+  const [patientData, setPatientData] =
+    useState<PatientData>(INITIAL_PATIENT_DATA);
 
   // --- PERSISTENCIA DE SESIÓN ---
+  // Corregido para evitar "cascading renders" según el Linter
   useEffect(() => {
     const lastSessionEmail = localStorage.getItem("lastSessionEmail");
-    if (lastSessionEmail) {
-      const savedProfile = localStorage.getItem(`userProfile_${lastSessionEmail}`);
-      const savedClinic = localStorage.getItem(`clinicData_${lastSessionEmail}`);
+    if (!lastSessionEmail) return;
 
-      if (savedProfile && savedClinic) {
-        setProfileData(JSON.parse(savedProfile));
-        setClinicData(JSON.parse(savedClinic));
+    const savedProfile = localStorage.getItem(
+      `userProfile_${lastSessionEmail}`,
+    );
+    const savedClinic = localStorage.getItem(`clinicData_${lastSessionEmail}`);
+
+    if (savedProfile && savedClinic) {
+      const timer = setTimeout(() => {
+        setProfileData(JSON.parse(savedProfile) as ProfileData);
+        setClinicData(JSON.parse(savedClinic) as ClinicData);
         setStep("dashboard");
-      }
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -75,8 +127,8 @@ export default function App() {
     const existingClinic = localStorage.getItem(`clinicData_${cleanEmail}`);
 
     if (existingProfile && existingClinic) {
-      setProfileData(JSON.parse(existingProfile));
-      setClinicData(JSON.parse(existingClinic));
+      setProfileData(JSON.parse(existingProfile) as ProfileData);
+      setClinicData(JSON.parse(existingClinic) as ClinicData);
       localStorage.setItem("lastSessionEmail", cleanEmail);
       setStep("dashboard");
     } else {
@@ -88,7 +140,10 @@ export default function App() {
 
   const handleCompleteRegistration = () => {
     const emailKey = profileData.email;
-    localStorage.setItem(`userProfile_${emailKey}`, JSON.stringify(profileData));
+    localStorage.setItem(
+      `userProfile_${emailKey}`,
+      JSON.stringify(profileData),
+    );
     localStorage.setItem(`clinicData_${emailKey}`, JSON.stringify(clinicData));
     localStorage.setItem("lastSessionEmail", emailKey);
     setStep("dashboard");
@@ -108,12 +163,12 @@ export default function App() {
     setStep("dashboard");
   };
 
-  const handleEditReport = (study: any) => {
+  const handleEditReport = (study: ReportSummary) => {
     const reportImages = study.images || [];
     setUploadedImages(reportImages);
 
     setPatientData({
-      id: study.id, 
+      id: study.id,
       animalName: study.patient || "",
       tutorName: study.tutor || "",
       species: study.species || "Canino",
@@ -123,10 +178,10 @@ export default function App() {
       studyType: study.study || "",
       reason: study.observaciones || "",
       diagnostico: study.diagnostico || "",
-      images: reportImages
+      images: reportImages,
     });
 
-    setStep("analysisCase"); 
+    setStep("analysisCase");
   };
 
   // --- RENDERIZADO DE PASOS ---
@@ -144,7 +199,7 @@ export default function App() {
         return (
           <PreConfirmationPage
             data={clinicData}
-            onChange={setClinicData}
+            onChange={(newData) => setClinicData(newData as ClinicData)}
             onContinue={() => setStep("postConfirmation")}
             onBack={() => setStep("login")}
           />
@@ -154,7 +209,7 @@ export default function App() {
         return (
           <PostConfirmationPage
             data={profileData}
-            onChange={setProfileData}
+            onChange={(newData) => setProfileData(newData as ProfileData)}
             onContinue={handleCompleteRegistration}
             onBack={() => setStep("preConfirmation")}
           />
@@ -163,8 +218,8 @@ export default function App() {
       case "dashboard":
         return (
           <DashboardPage
-            userProfile={profileData} 
-            onLogout={handleLogout}    
+            userProfile={profileData}
+            onLogout={handleLogout}
             onCreateReport={() => {
               setPatientData(INITIAL_PATIENT_DATA);
               setUploadedImages([]);
@@ -195,7 +250,7 @@ export default function App() {
             patientData={patientData}
             doctorName={profileData.fullName}
             doctorEmail={profileData.email}
-            clinicName={clinicData.clinicName} 
+            clinicName={clinicData.clinicName}
             onBack={() => setStep("analyze")}
             onFinish={handleBackToDashboard}
           />
@@ -208,9 +263,7 @@ export default function App() {
 
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-[#FDFDFD]">
-        {renderStep()}
-      </div>
+      <div className="min-h-screen bg-[#FDFDFD]">{renderStep()}</div>
     </LanguageProvider>
   );
 }

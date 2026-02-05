@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export function useLanguage() {
   const [lang, setLang] = useState<"en" | "es">(
-    (localStorage.getItem("lang") as "en" | "es") || "en"
+    (localStorage.getItem("lang") as "en" | "es") || "en",
   );
 
   const toggleLanguage = () => {

@@ -19,8 +19,11 @@ export function LanguageSwitcher() {
       {open && (
         <>
           {/* Capa invisible para cerrar el menú al hacer clic fuera */}
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>
-          
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setOpen(false)}
+          ></div>
+
           <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-1 overflow-hidden">
             <button
               onClick={() => {

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 type Language = "es" | "en";
@@ -7,7 +8,9 @@ interface LanguageContextType {
   setLang: (l: Language) => void;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>(
+  undefined,
+);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
@@ -27,6 +30,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (!context) throw new Error("useLanguage debe usarse dentro de LanguageProvider");
+  if (!context)
+    throw new Error("useLanguage debe usarse dentro de LanguageProvider");
   return context;
 }

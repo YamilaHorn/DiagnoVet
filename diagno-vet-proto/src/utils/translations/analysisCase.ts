@@ -1,4 +1,7 @@
-export const analysisCaseTranslations: any = {
+export const analysisCaseTranslations: Record<
+  "es" | "en",
+  Record<string, string>
+> = {
   en: {
     header_title: "Report Editor",
     exit_alert_title: "Unsaved Changes",
@@ -18,7 +21,7 @@ export const analysisCaseTranslations: any = {
     btn_finish: "Finish",
     btn_dictate: "DICTATE",
     btn_stop: "STOP",
-    placeholder_ai: "Generating AI interpretation..."
+    placeholder_ai: "Generating AI interpretation...",
   },
   es: {
     header_title: "Editor de Informe",
@@ -39,6 +42,6 @@ export const analysisCaseTranslations: any = {
     btn_finish: "Finalizar",
     btn_dictate: "🎤 DICTAR",
     btn_stop: "DETENER",
-    placeholder_ai: "Generando interpretación por IA..."
-  }
+    placeholder_ai: "Generando interpretación por IA...",
+  },
 };

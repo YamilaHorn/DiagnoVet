@@ -19,7 +19,7 @@ export const dashboardTranslations = {
     status_progress: "En progreso",
     empty_title: "No tienes reportes guardados todavía.",
     empty_btn: "Crear mi primer reporte",
-    delete_confirm: "¿Estás seguro de que deseas eliminar este reporte?"
+    delete_confirm: "¿Estás seguro de que deseas eliminar este reporte?",
   },
   en: {
     btn_new_report: "New Report",
@@ -41,6 +41,6 @@ export const dashboardTranslations = {
     status_progress: "In progress",
     empty_title: "You don't have any saved reports yet.",
     empty_btn: "Create my first report",
-    delete_confirm: "Are you sure you want to delete this report?"
-  }
+    delete_confirm: "Are you sure you want to delete this report?",
+  },
 };

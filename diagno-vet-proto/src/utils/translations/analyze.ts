@@ -1,4 +1,7 @@
-export const analyzeTranslations: any = {
+export const analyzeTranslations: Record<
+  "es" | "en",
+  Record<string, string>
+> = {
   en: {
     header_title: "New Clinical Analysis",
     main_title: "Analyze Patient",
@@ -22,7 +25,7 @@ export const analyzeTranslations: any = {
     btn_continue: "CONTINUE",
     images_title: "Images",
     images_min_req: "Minimum 1 image required *",
-    btn_upload: "Upload Image"
+    btn_upload: "Upload Image",
   },
   es: {
     header_title: "Nuevo Análisis Clínico",
@@ -47,6 +50,6 @@ export const analyzeTranslations: any = {
     btn_continue: "CONTINUAR",
     images_title: "Imágenes",
     images_min_req: "Mínimo 1 imagen requerida *",
-    btn_upload: "Subir Imagen"
-  }
+    btn_upload: "Subir Imagen",
+  },
 };

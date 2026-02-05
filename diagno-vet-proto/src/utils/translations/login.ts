@@ -7,7 +7,8 @@ export const loginTranslations = {
     btn_continue: "Continuar",
     btn_verifying: "Verificando...",
     footer_new_account: "¿No tienes cuenta?",
-    footer_info: "Si el email no coincide con el perfil activo, iniciaremos un registro nuevo."
+    footer_info:
+      "Si el email no coincide con el perfil activo, iniciaremos un registro nuevo.",
   },
   en: {
     title: "Enter your email to access the diagnostic platform.",
@@ -17,6 +18,7 @@ export const loginTranslations = {
     btn_continue: "Continue",
     btn_verifying: "Verifying...",
     footer_new_account: "Don't have an account?",
-    footer_info: "If the email doesn't match the active profile, we will start a new registration."
-  }
+    footer_info:
+      "If the email doesn't match the active profile, we will start a new registration.",
+  },
 };

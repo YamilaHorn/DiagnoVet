@@ -29,9 +29,11 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
     setTimeout(() => {
       setLoading(false);
       const currentEmail = email.toLowerCase().trim();
-      
+
       // Buscamos si existe un perfil para este email específico
-      const savedProfileStr = localStorage.getItem(`userProfile_${currentEmail}`);
+      const savedProfileStr = localStorage.getItem(
+        `userProfile_${currentEmail}`,
+      );
 
       if (savedProfileStr) {
         onExistingUser(currentEmail);
@@ -119,9 +121,7 @@ export function LoginPage({ onExistingUser, onNewUser }: Props) {
           <footer className="mt-10 text-center">
             <p className="text-xs text-slate-400 font-medium leading-relaxed">
               {t.footer_new_account} <br />
-              <span className="text-slate-500">
-                {t.footer_info}
-              </span>
+              <span className="text-slate-500">{t.footer_info}</span>
             </p>
           </footer>
         </div>

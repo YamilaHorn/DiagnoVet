@@ -36,8 +36,8 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
     (item: UploadItem) => {
       setItems((prev) =>
         prev.map((p) =>
-          p.id === item.id ? { ...p, status: "uploading", progress: 0 } : p
-        )
+          p.id === item.id ? { ...p, status: "uploading", progress: 0 } : p,
+        ),
       );
 
       let progress = 0;
@@ -51,7 +51,7 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
             const next = prev.map((p) =>
               p.id === item.id
                 ? { ...p, status: "done" as const, progress: 100 }
-                : p
+                : p,
             );
 
             if (onUploadComplete) {
@@ -69,15 +69,13 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
         } else {
           setItems((prev) =>
             prev.map((p) =>
-              p.id === item.id
-                ? { ...p, progress: Math.round(progress) }
-                : p
-            )
+              p.id === item.id ? { ...p, progress: Math.round(progress) } : p,
+            ),
           );
         }
       }, 300);
     },
-    [onUploadComplete]
+    [onUploadComplete],
   );
 
   const handleFiles = useCallback(
@@ -116,7 +114,7 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
         setTimeout(() => valid.forEach(startUpload), 500);
       }
     },
-    [startUpload]
+    [startUpload],
   );
 
   const onDrop = useCallback(
@@ -124,7 +122,7 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
       e.preventDefault();
       handleFiles(e.dataTransfer.files);
     },
-    [handleFiles]
+    [handleFiles],
   );
 
   return (
@@ -134,7 +132,9 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
         onDragOver={(e) => e.preventDefault()}
         className="border-2 border-dashed border-slate-200 rounded-xl p-6 sm:p-8 text-center bg-white hover:bg-slate-50 transition-colors"
       >
-        <p className="text-sm text-slate-500 font-medium">Arrastrá archivos aquí o</p>
+        <p className="text-sm text-slate-500 font-medium">
+          Arrastrá archivos aquí o
+        </p>
         <label className="inline-block mt-3 cursor-pointer">
           <input
             type="file"
@@ -179,7 +179,11 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
                   {it.file.name}
                 </div>
                 <div className="text-[10px] font-black text-slate-400 uppercase mt-2 sm:mt-0">
-                  {it.status === "uploading" ? `${it.progress}%` : it.status === "done" ? "Ready" : "Queued"}
+                  {it.status === "uploading"
+                    ? `${it.progress}%`
+                    : it.status === "done"
+                      ? "Ready"
+                      : "Queued"}
                 </div>
               </div>
 
@@ -194,13 +198,23 @@ export const FileDropzone: React.FC<Props> = ({ onUploadComplete }) => {
             </div>
 
             <div className="ml-0 sm:ml-4 mt-3 sm:mt-0">
-              <button 
+              <button
                 onClick={() => removeItem(it.id)}
                 className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                 title="Eliminar"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
               </button>
             </div>
