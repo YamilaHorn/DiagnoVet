@@ -198,8 +198,6 @@ export default function App() {
             clinicName={clinicData.clinicName} 
             onBack={() => setStep("analyze")}
             onFinish={handleBackToDashboard}
-            userProfile={profileData}
-            onLogout={handleLogout}
           />
         );
 

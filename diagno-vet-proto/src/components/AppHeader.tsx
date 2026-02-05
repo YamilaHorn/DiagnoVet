@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { useLanguage } from "../context/LanguageContext"; // Importamos el hook
+import { useLanguage } from "../context/LanguageContext";
 
 type AppHeaderProps = {
   title?: string;
@@ -9,6 +9,7 @@ type AppHeaderProps = {
   logoLink?: string;
   userProfile?: { fullName: string; title: string };
   onLogout?: () => void;
+  showLanguageSelector?: boolean; // Esta prop controla la visibilidad
 };
 
 export function AppHeader({
@@ -18,8 +19,9 @@ export function AppHeader({
   logoLink,
   userProfile,
   onLogout,
+  showLanguageSelector = true, // Por defecto es true
 }: AppHeaderProps) {
-  const { lang } = useLanguage(); // "Pescamos" el idioma global
+  const { lang } = useLanguage(); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -38,7 +40,7 @@ export function AppHeader({
       const reader = new FileReader();
       reader.onload = (event) => {
         localStorage.setItem("doctorSignature", event.target?.result as string);
-        alert(text.signatureSuccess); // Texto traducido
+        alert(text.signatureSuccess);
         setIsMenuOpen(false);
       };
       reader.readAsDataURL(e.target.files[0]);
@@ -55,7 +57,7 @@ export function AppHeader({
             <img src="/logo.png" alt="Logo" className="h-8 w-auto" />
             {onBack && (
               <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-900 transition flex items-center gap-1 font-medium">
-                ← {text.back} {/* Traducido */}
+                ← {text.back}
               </button>
             )}
           </div>
@@ -70,7 +72,8 @@ export function AppHeader({
           {/* DERECHA: Botones, Idioma y Perfil */}
           <div className="flex items-center gap-4 shrink-0">
             {right}
-            <LanguageSwitcher />
+            
+            {showLanguageSelector && <LanguageSwitcher />}
             
             {userProfile && (
               <div className="relative border-l border-slate-100 pl-4 ml-2">
@@ -83,7 +86,7 @@ export function AppHeader({
                       {userProfile.fullName}
                     </p>
                     <p className="text-[9px] font-bold text-[#2FB8B3] uppercase tracking-tighter">
-                      {userProfile.title || text.defaultTitle} {/* Traducido */}
+                      {userProfile.title || text.defaultTitle}
                     </p>
                   </div>
                   

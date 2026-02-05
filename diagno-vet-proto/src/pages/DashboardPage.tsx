@@ -10,6 +10,38 @@ type Props = {
   onLogout?: () => void;
 };
 
+// Diccionario para traducir datos que vienen "hardcoded" de la base de datos
+const DATA_TRANSLATIONS: any = {
+  en: {
+    // Estudios y especies
+    "Ecografía": "Abdominal Ultrasound",
+    "Ecocardiografía": "Echocardiography",
+    "Radiografía": "Digital Radiography",
+    "Doppler": "Vascular Doppler",
+    "Canino": "Canine",
+    "Felino": "Feline",
+    "Equino": "Equine",
+    "Exótico": "Exotic",
+    // Profesiones (Esto corrige tu problema)
+    "Especialista": "Specialist",
+    "Veterinario": "Veterinarian",
+    "Médico Veterinario": "Veterinary Doctor"
+  },
+  es: {
+    "Ecografía": "Ecografía Abdominal",
+    "Ecocardiografía": "Ecocardiografía",
+    "Radiografía": "Radiografía Digital",
+    "Doppler": "Doppler Vascular",
+    "Canino": "Canino",
+    "Felino": "Felino",
+    "Equino": "Equino",
+    "Exótico": "Exótico",
+    "Specialist": "Especialista",
+    "Veterinarian": "Veterinario",
+    "Veterinary Doctor": "Médico Veterinario"
+  }
+};
+
 export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLogout }: Props) {
   const { lang } = useLanguage();
   const t = dashboardTranslations[lang];
@@ -45,6 +77,7 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
       <AppHeader
         userProfile={userProfile}
         onLogout={onLogout}
+        showLanguageSelector={true} 
         right={
           <button
             onClick={onCreateReport}
@@ -66,14 +99,18 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
           </p>
         </section>
 
-        {/* METRICS */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <MetricCard title={t.metric_reports} value={studies.length.toString()} icon="file" />
           <MetricCard title={t.metric_patients} value={[...new Set(studies.map(s => s.patient))].length.toString()} icon="users" />
-          <MetricCard title={t.metric_specialty} value={userProfile?.title?.split(' ')[0] || "Vet"} icon="bolt" />
+          
+          {/* CORRECCIÓN FINAL: Buscamos la traducción de la profesión guardada */}
+          <MetricCard 
+            title={t.metric_specialty} 
+            value={DATA_TRANSLATIONS[lang][userProfile?.title] || userProfile?.title || t.vet_default} 
+            icon="bolt" 
+          />
         </section>
 
-        {/* SEARCH BAR */}
         <section className="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 px-4">
           <div className="relative w-full md:w-96 group">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2FB8B3] transition-colors">
@@ -94,12 +131,11 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
           </h2>
         </section>
 
-        {/* LISTADO DE ESTUDIOS */}
         <section className="space-y-6">
           <div className="bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
             <div className="hidden md:grid grid-cols-5 bg-slate-50/50 px-10 py-4 border-b border-slate-50">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_patient}</p>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_tutor}</p>
+              <p className="text-[10px) font-black text-slate-400 uppercase tracking-widest">{t.table_tutor}</p>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.table_study}</p>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">{t.table_status}</p>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{t.table_actions}</p>
@@ -115,12 +151,16 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
                       </div>
                       <div>
                         <p className="font-black text-slate-800 leading-none">{study.patient}</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">{study.species}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                          {DATA_TRANSLATIONS[lang][study.species] || study.species}
+                        </p>
                       </div>
                     </div>
                     <div className="text-sm font-bold text-slate-500">{study.tutor}</div>
                     <div>
-                      <p className="text-sm font-black text-slate-800">{study.study}</p>
+                      <p className="text-sm font-black text-slate-800">
+                        {DATA_TRANSLATIONS[lang][study.study] || study.study}
+                      </p>
                       <p className="text-[10px] font-bold text-slate-400 uppercase">{study.date}</p>
                     </div>
                     <div className="flex justify-center">
@@ -153,17 +193,24 @@ export function DashboardPage({ onCreateReport, onEditReport, userProfile, onLog
 }
 
 function MetricCard({ title, value, icon }: { title: string; value: string; icon: string }) {
+  const isNumber = !isNaN(Number(value));
+
   return (
-    <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow group">
+    <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
       <div className="flex justify-between items-start mb-4">
         <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{title}</p>
-        <div className="p-2 bg-slate-50 rounded-xl text-slate-400 group-hover:bg-[#2FB8B3]/10 group-hover:text-[#2FB8B3] transition-colors">
+        <div className="p-2 bg-slate-50 rounded-xl text-slate-400 group-hover:bg-[#2FB8B3]/10 group-hover:text-[#2FB8B3] transition-colors shrink-0">
           {icon === 'file' && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>}
           {icon === 'users' && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>}
           {icon === 'bolt' && <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>}
         </div>
       </div>
-      <p className="text-4xl font-black text-slate-900 tracking-tight">{value}</p>
+      
+      <p className={`font-black text-slate-900 tracking-tight leading-tight ${
+        isNumber ? "text-4xl" : "text-xl uppercase"
+      }`}>
+        {value}
+      </p>
     </div>
   );
 }
