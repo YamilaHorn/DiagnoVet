@@ -5,11 +5,14 @@ Este repositorio contiene mi propuesta para el UI Engineer Challenge de diagnoVE
 🔗 Demo en Vivo
 https://diagnovett.netlify.app
 
-Tras realizar una auditoría detallada de los flujos de trabajo presentados en los videos de la plataforma, identifiqué los siguientes puntos críticos de fricción que comprometen la eficiencia del profesional:
+* Tras realizar una auditoría detallada de los flujos de trabajo presentados en los videos de la plataforma, identifiqué los siguientes puntos críticos de fricción que comprometen la eficiencia del profesional:
 
-Formularios Extensos y Lineales: La estructura actual presenta formularios excesivamente largos que saturan la interfaz, obligando al veterinario a realizar un scroll constante y aumentando la posibilidad de omitir datos críticos durante la consulta.
+* Formularios Extensos y Lineales: La estructura actual presenta formularios excesivamente largos que saturan la interfaz, obligando al veterinario a realizar un scroll constante y aumentando la posibilidad de omitir datos críticos durante la consulta.
+
+* Gestión Fragmentada de Datos: La desconexión entre la carga de archivos multimedia y el registro de observaciones diagnósticas dificulta una visión integral del caso en tiempo real.
 
 
+* Riesgo de Errores por Transcripción: Al no contar con herramientas de asistencia directa, el profesional debe recordar detalles técnicos para transcribirlos posteriormente, lo que aumenta el riesgo de imprecisiones en el diagnóstico final.
 
 Mi solución no se limita a una actualización visual; es una evolución funcional diseñada para que la herramienta se adapte al entorno físico del consultorio.
 
